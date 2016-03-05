@@ -3,17 +3,17 @@ extern crate libc;
 use std::result::Result;
 use std::ptr;
 use std::time::Duration;
-use std::io;
+use std::io::{self, Read};
 use std::mem;
 use keyboard;
 
-struct KeyboardPoller {
+pub struct KeyboardPoller {
   queue: libc::c_int,
   descriptor: libc::kevent
 }
 
 impl KeyboardPoller {
-  fn new() -> Result<KeyboardPoller, &'static str> {
+  pub fn new() -> Result<KeyboardPoller, &'static str> {
     let event_queue = unsafe { libc::kqueue() };
     if event_queue == -1 {
       return Err("could not create event queue, kqueue returned -1");
@@ -43,19 +43,26 @@ impl KeyboardPoller {
 impl keyboard::KeyboardPoller for KeyboardPoller {
 
   fn poll(&mut self, timeout: Duration) -> Result<u32,&'static str> {
+    //convert timeout format to struct that kevent call uses
     let timeout_spec = libc::timespec {
       tv_sec: timeout.as_secs() as i64,
       tv_nsec: timeout.subsec_nanos() as i64
     };
+    //wait until something becomes available on stdin, or timeout happens
     unsafe {
       libc::kevent(self.queue, ptr::null(), 0, &mut self.descriptor, 1, &timeout_spec);
     }
+    //read up to 4 bytes from stdin
     let mut key = 0u32;
-    {
-      let buffer: &[u8; 4] = unsafe { mem::transmute(&key) };
-      io::stdin().read(&buffer);
+    let read_result = {
+      let buffer: &mut [u8; 4] = unsafe { mem::transmute(&mut key) };
+      io::stdin().read(buffer)
+    };
+
+    match read_result {
+      Ok(_) => Ok(key),
+      Err(_) => Err("read error from stdin")
     }
-    key
   }
 
 }

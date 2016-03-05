@@ -1,9 +1,10 @@
 
 use std::time::Duration;
 
-trait KeyboardPoller : Drop {
+pub trait KeyboardPoller : Drop {
 	fn poll(&mut self, timeout: Duration) -> Result<u32,&'static str>;
 }
+
 
 #[cfg (target_os="macos")]
 mod kqueue;
