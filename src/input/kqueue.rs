@@ -5,11 +5,13 @@ use std::ptr;
 use std::time::Duration;
 use std::io::{self, Read};
 use std::mem;
-use keyboard;
+use super::termios::{RestoreHandle, set_term_raw};
+use super::PollResult;
 
 pub struct KeyboardPoller {
   queue: libc::c_int,
-  descriptor: libc::kevent
+  descriptor: libc::kevent,
+  stdin_restore_handle: RestoreHandle
 }
 
 impl KeyboardPoller {
@@ -19,9 +21,12 @@ impl KeyboardPoller {
       return Err("could not create event queue, kqueue returned -1");
     }
 
+    let stdin = libc::STDIN_FILENO;
+    let stdin_restore_handle = set_term_raw(stdin);
+
     let poller = KeyboardPoller {
       descriptor: libc::kevent {
-        ident:  libc::STDIN_FILENO as usize,
+        ident:  stdin as usize,
         filter: libc::EVFILT_READ,
         flags:  libc::EV_ADD,
         fflags: 0,
@@ -29,6 +34,7 @@ impl KeyboardPoller {
         udata:  ptr::null_mut(),
       },
       queue: event_queue,
+      stdin_restore_handle: stdin_restore_handle
     };
 
     //and pass changes to kernel
@@ -40,18 +46,23 @@ impl KeyboardPoller {
   }
 }
 
-impl keyboard::KeyboardPoller for KeyboardPoller {
+impl super::KeyboardPoller for KeyboardPoller {
 
-  fn poll(&mut self, timeout: Duration) -> Result<u32,&'static str> {
+  fn poll(&mut self, timeout: Duration) -> PollResult {
     //convert timeout format to struct that kevent call uses
     let timeout_spec = libc::timespec {
       tv_sec: timeout.as_secs() as i64,
       tv_nsec: timeout.subsec_nanos() as i64
     };
     //wait until something becomes available on stdin, or timeout happens
-    unsafe {
-      libc::kevent(self.queue, ptr::null(), 0, &mut self.descriptor, 1, &timeout_spec);
+    let change_count = unsafe {
+      libc::kevent(self.queue, ptr::null(), 0, &mut self.descriptor, 1, &timeout_spec)
+    };
+    //the file descriptor didn't change, the kevent call timed out
+    if change_count == 0 {
+      return PollResult::Timeout;
     }
+
     //read up to 4 bytes from stdin
     let mut key = 0u32;
     let read_result = {
@@ -60,8 +71,8 @@ impl keyboard::KeyboardPoller for KeyboardPoller {
     };
 
     match read_result {
-      Ok(_) => Ok(key),
-      Err(_) => Err("read error from stdin")
+      Ok(_) => PollResult::KeyPressed(key),
+      Err(_) => PollResult::Err("read error from stdin")
     }
   }
 

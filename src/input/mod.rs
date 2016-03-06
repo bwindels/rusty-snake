@@ -1,11 +1,27 @@
 
 use std::time::Duration;
-
-pub trait KeyboardPoller : Drop {
-	fn poll(&mut self, timeout: Duration) -> Result<u32,&'static str>;
+#[allow(dead_code)]
+pub enum Key {
+	Left,
+	Right,
+	Up,
+	Down,
+	Esc,
+	Space,
+	Other
 }
 
+pub enum PollResult {
+	KeyPressed(u32),
+	Timeout,
+	Err(&'static str)
+}
 
+pub trait KeyboardPoller : Drop {
+	fn poll(&mut self, timeout: Duration) -> PollResult;
+}
+
+mod termios;
 #[cfg (target_os="macos")]
 mod kqueue;
 #[cfg (target_os="macos")]
