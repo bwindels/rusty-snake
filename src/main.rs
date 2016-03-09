@@ -21,12 +21,15 @@ fn main() {
 
 	let mut keyboard = input::create_keyboard_poller().unwrap();
 
+	let tick_interval = Duration::from_millis(1000);
+	let mut remaining_interval = tick_interval.clone();
+
 	let mut should_exit = false;
 	let clock = Clock::new();
-
+	
 	while !should_exit {
 		let start = clock.now();
-		match keyboard.poll(Duration::from_millis(1000)) {
+		match keyboard.poll(tick_interval) {
 			PollResult::Timeout => {
 				term.write(pos2, "timed out");
 			},
