@@ -7,7 +7,7 @@ use geom::Point;
 
 fn init_buffer_with_pos(buffer: &mut String, pos: Point) {
 	buffer.clear();
-	buffer.push_str("\033[");
+	buffer.push_str("\x1B[");
 	write!(buffer, "{}", pos.y).unwrap();
 	buffer.push_str(";");
 	write!(buffer, "{}", pos.x).unwrap();
@@ -50,11 +50,11 @@ impl AnsiTerm {
 	}
 
 	pub fn hide_cursor(&mut self) {
-		self.write_bytes("\033[?25l");
+		self.write_bytes("\x1B[?25l");
 	}
 
 	pub fn clear(&mut self) {
-		self.write_bytes("\033[2J");
+		self.write_bytes("\x1B[2J");
 	} 
 
 	pub fn write(&mut self, pos: Point, string: &str) {
