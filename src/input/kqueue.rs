@@ -81,7 +81,6 @@ impl super::KeyboardPoller for KeyboardPoller {
 impl Drop for KeyboardPoller {
 
   fn drop(&mut self) {
-    println!("cleaning up keyboard::kqueue::KeyboardPoller");
     unsafe {
       libc::close(self.queue);
     }

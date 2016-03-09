@@ -7,7 +7,6 @@ pub struct RestoreHandle {
 
 impl RestoreHandle {
     fn restore(&mut self) {
-    	println!("restoring term raw mode");
     	unsafe {
     		libc::tcsetattr(self.fd, 0, &self.original_attr);
     	}
