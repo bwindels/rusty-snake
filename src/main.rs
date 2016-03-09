@@ -13,10 +13,16 @@ fn main() {
 	let message = format!("the terminal has {} rows and {} columns", term.rows(), term.columns());
 	term.write(Point {x: 5, y: 5}, message.as_str());
 
+	let keyboard_result_pos = Point {x: 5, y: 10};
+	term.write(keyboard_result_pos, "Watching keyboard...");
+	let pos2 = Point {y: keyboard_result_pos.y + 1, .. keyboard_result_pos};
+
 	let mut keyboard = input::create_keyboard_poller().unwrap();
-	match keyboard.poll(Duration::from_millis(1000)) {
-		PollResult::KeyPressed(key) => println!("key pressed {}", key),
-		PollResult::Timeout => println!("timed out"),
-		PollResult::Err(msg) => println!("error: {:?}", msg)
+	match keyboard.poll(Duration::from_millis(5000)) {
+		PollResult::KeyPressed(key) => term.write(pos2, format!("key pressed {}", key).as_str()),
+		PollResult::Timeout => term.write(pos2, "timed out"),
+		PollResult::Err(msg) => term.write(pos2, format!("error: {:?}", msg).as_str())
 	};
+
+	term.write(Point {x:0, y: 15}, "");
 }
