@@ -7,11 +7,24 @@ use std::io::{self, Read};
 use std::mem;
 use super::termios::{RestoreHandle, set_term_raw};
 use super::PollResult;
+use super::Key;
 
 pub struct KeyboardPoller {
   queue: libc::c_int,
   descriptor: libc::kevent,
   stdin_restore_handle: RestoreHandle
+}
+
+fn map_code_to_key(code: u32) -> Key {
+  match code {
+    0x00445B1B => Key::Left,
+    0x00435B1B => Key::Right,
+    0x00415B1B => Key::Up,
+    0x00425B1B => Key::Down,
+    0x00000020 => Key::Space,
+    0x0000001B => Key::Esc,
+    _          => Key::Other
+  }
 }
 
 impl KeyboardPoller {
@@ -71,7 +84,7 @@ impl super::KeyboardPoller for KeyboardPoller {
     };
 
     match read_result {
-      Ok(_) => PollResult::KeyPressed(key),
+      Ok(_) => PollResult::KeyPressed(map_code_to_key(key)),
       Err(_) => PollResult::Err("read error from stdin")
     }
   }

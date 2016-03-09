@@ -1,6 +1,6 @@
-
+use std::fmt::{Formatter, Display, Error};
 use std::time::Duration;
-#[allow(dead_code)]
+
 pub enum Key {
 	Left,
 	Right,
@@ -11,8 +11,22 @@ pub enum Key {
 	Other
 }
 
+impl Display for Key {
+	fn fmt(&self, fmt: &mut Formatter) -> Result<(), Error> {
+		match *self {
+			Key::Left	=> fmt.write_str("Key::Left"),
+			Key::Right	=> fmt.write_str("Key::Right"),
+			Key::Up		=> fmt.write_str("Key::Up"),
+			Key::Down	=> fmt.write_str("Key::Down"),
+			Key::Esc	=> fmt.write_str("Key::Esc"),
+			Key::Space	=> fmt.write_str("Key::Space"),
+			Key::Other	=> fmt.write_str("Key::Other")
+		}
+	}
+}
+
 pub enum PollResult {
-	KeyPressed(u32),
+	KeyPressed(Key),
 	Timeout,
 	Err(&'static str)
 }
