@@ -19,7 +19,7 @@ fn main() {
 
 	let mut keyboard = input::create_keyboard_poller().unwrap();
 	match keyboard.poll(Duration::from_millis(5000)) {
-		PollResult::KeyPressed(key) => term.write(pos2, format!("key pressed {}", key).as_str()),
+		PollResult::KeyPressed(key) => term.write(pos2, format!("key pressed {:#010X}", key).as_str()),
 		PollResult::Timeout => term.write(pos2, "timed out"),
 		PollResult::Err(msg) => term.write(pos2, format!("error: {:?}", msg).as_str())
 	};
