@@ -20,6 +20,7 @@ pub struct AnsiTerm {
 	compose_buffer: String
 }
 
+#[allow(dead_code)]
 impl AnsiTerm {
 
 	pub fn new(fd: libc::c_int) -> Result<AnsiTerm> {
