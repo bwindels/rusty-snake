@@ -43,7 +43,7 @@ fn main() {
 			},
 		};
 		let end = clock.now();
-		let elapsed = clock.duration(start, end);
+		let elapsed = clock.diff(start, end);
 		term.write(Point {x: 40, y: 11}, format!("elapsed time: {:?}", elapsed).as_str());
 	}
 

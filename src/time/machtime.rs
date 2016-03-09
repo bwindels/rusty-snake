@@ -30,7 +30,7 @@ impl Clock {
 		Instant {abs_time: abs_time}
 	}
 
-	pub fn duration(&self, first: Instant, last: Instant) -> Duration {
+	pub fn diff(&self, first: Instant, last: Instant) -> Duration {
 		let abs_diff = last.abs_time - first.abs_time;
 		let nano_diff = abs_diff as f64 * (self.conv_info.numer as f64 / self.conv_info.denom as f64);
 		let sec_diff = (nano_diff / NANO_SEC_IN_ONE_SEC).floor();
