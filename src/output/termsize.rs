@@ -1,11 +1,7 @@
 extern crate libc;
 
 use std::io::{Result, Error, ErrorKind};
-
-struct Point {
-	x: u16,
-	y: u16
-}
+use geom::Point;
 
 #[repr(C)]
 struct winsize {
@@ -23,9 +19,9 @@ pub fn get_term_size(fd: libc::c_int) -> Result<Point> {
 
 	match r {
 		0 => Ok(Point{x: w.ws_col, y: w.ws_row}),
-		errorCode => {
-			let errorMessage = format!("ioctl returned error {:?}", errorCode);
-			Err(Error::new(ErrorKind::Other, errorMessage))
+		error_code => {
+			let error_message = format!("ioctl returned error {:?}", error_code);
+			Err(Error::new(ErrorKind::Other, error_message))
 		}
 	}
 }

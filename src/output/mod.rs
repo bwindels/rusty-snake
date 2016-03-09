@@ -1,2 +1,2 @@
-mod ansiterm;
+pub mod ansiterm;
 mod termsize;
