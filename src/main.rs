@@ -3,35 +3,47 @@ mod output;
 mod geom;
 mod time;
 
-use input::{PollResult, Key};
 use std::time::Duration;
+use input::{Keyboard, PollResult, Key};
+use output::Terminal;
 use output::ansiterm::AnsiTerm;
+use time::Timer;
 use geom::Point;
-use time::Clock;
 
-fn main() {
-	let mut term = AnsiTerm::from_stdout().unwrap();
-	term.clear();
-	let message = format!("the terminal has {} rows and {} columns", term.rows(), term.columns());
-	term.write(Point {x: 5, y: 5}, message.as_str());
+struct SnakeApp {
+	keyboard: Box<Keyboard>,
+	term: Box<Terminal>,
+	timer: Box<Timer>,
+	interval: Duration,
+}
 
-	let keyboard_result_pos = Point {x: 5, y: 10};
-	term.write(keyboard_result_pos, "Watching keyboard...");
-	let pos2 = Point {y: keyboard_result_pos.y + 1, .. keyboard_result_pos};
+impl SnakeApp {
 
-	let mut keyboard = input::create_keyboard_poller().unwrap();
+	pub fn run(&mut self) {
+		self.term.clear();
 
-	let tick_interval = Duration::from_millis(1000);
-	let mut remaining_interval = tick_interval.clone();
+		let size = self.term.size();
+		let message = format!("the screen has height {} and width {}", size.height, size.width);
+		self.term.write(Point {x: 5, y: 5}, message.as_str());
+		self.term.write(Point {x: 5, y: 10}, "Watching keyboard...");
 
-	let mut should_exit = false;
-	let clock = Clock::new();
-	
-	while !should_exit {
-		let start = clock.now();
-		match keyboard.poll(tick_interval) {
+		let mut should_exit = false;
+		
+		while !should_exit {
+			should_exit = self.wait_for_keypress();
+		}
+
+		self.term.write(Point {x:0, y: 15}, "");
+	}
+
+	fn wait_for_keypress(&mut self) -> bool {
+		let mut should_exit = false;
+		let start = self.timer.now();
+		let pos2 = Point {x: 5, y: 11};
+
+		match self.keyboard.poll(self.interval) {
 			PollResult::Timeout => {
-				term.write(pos2, "timed out");
+				self.term.write(pos2, "timed out");
 			},
 			PollResult::Err(msg) => {
 				panic!("error: {:?}", msg);
@@ -41,14 +53,32 @@ fn main() {
 					Key::Esc => true,
 					_ => false,
 				};
-				term.write_repeated(pos2, " ", 40);
-				term.write(pos2, format!("key pressed {}", key).as_str())
+				self.term.write_repeated(pos2, " ", 40);
+				self.term.write(pos2, format!("key pressed {}", key).as_str())
 			},
 		};
-		let end = clock.now();
-		let elapsed = clock.diff(start, end);
-		term.write(Point {x: 40, y: 11}, format!("elapsed time: {:?}", elapsed).as_str());
-	}
+		let end = self.timer.now();
+		let elapsed = self.timer.diff(start, end);
+		self.term.write(Point {x: 40, y: 11}, format!("elapsed time: {:?}", elapsed).as_str());
 
-	term.write(Point {x:0, y: 15}, "");
+		should_exit
+	}
+}
+
+
+fn main() {
+
+	let ansiterm = AnsiTerm::from_stdout().unwrap();
+	let term = Box::new(ansiterm) as Box<Terminal>;
+	let keyboard = input::create_keyboard().unwrap();
+	let timer = time::create_timer();
+
+	let mut app = SnakeApp {
+		timer: timer,
+		term: term,
+		keyboard: keyboard,
+		interval: Duration::from_millis(1000)
+	};
+
+	app.run();
 }
