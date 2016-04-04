@@ -8,9 +8,9 @@ use geom::{Point, Size};
 fn init_buffer_with_pos(buffer: &mut String, pos: Point) {
 	buffer.clear();
 	buffer.push_str("\x1B[");
-	write!(buffer, "{}", pos.y).unwrap();
+	write!(buffer, "{}", (pos.y + 1)).unwrap();
 	buffer.push_str(";");
-	write!(buffer, "{}", pos.x).unwrap();
+	write!(buffer, "{}", (pos.x + 1)).unwrap();
 	buffer.push_str("H");
 }
 
