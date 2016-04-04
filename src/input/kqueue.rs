@@ -9,8 +9,8 @@ use super::termios::{RestoreHandle, set_term_raw};
 use super::PollResult;
 use super::Key;
 
-pub struct KeyboardPoller {
-  queue: libc::c_int,
+pub struct Keyboard {
+  queue_fd: libc::c_int,
   descriptor: libc::kevent,
   stdin_restore_handle: RestoreHandle
 }
@@ -27,17 +27,17 @@ fn map_code_to_key(code: u32) -> Key {
   }
 }
 
-impl KeyboardPoller {
-  pub fn new() -> Result<KeyboardPoller, &'static str> {
-    let event_queue = unsafe { libc::kqueue() };
-    if event_queue == -1 {
+impl Keyboard {
+  pub fn new() -> Result<Keyboard, &'static str> {
+    let event_queue_fd = unsafe { libc::kqueue() };
+    if event_queue_fd == -1 {
       return Err("could not create event queue, kqueue returned -1");
     }
 
     let stdin = libc::STDIN_FILENO;
     let stdin_restore_handle = set_term_raw(stdin);
 
-    let poller = KeyboardPoller {
+    let keyboard = Keyboard {
       descriptor: libc::kevent {
         ident:  stdin as usize,
         filter: libc::EVFILT_READ,
@@ -46,20 +46,20 @@ impl KeyboardPoller {
         data:   0,
         udata:  ptr::null_mut(),
       },
-      queue: event_queue,
+      queue_fd: event_queue_fd,
       stdin_restore_handle: stdin_restore_handle
     };
 
     //and pass changes to kernel
     unsafe {
-      libc::kevent(poller.queue, &poller.descriptor, 1, ptr::null_mut(), 0, ptr::null_mut());
+      libc::kevent(keyboard.queue_fd, &keyboard.descriptor, 1, ptr::null_mut(), 0, ptr::null_mut());
     }
 
-    return Ok(poller);
+    return Ok(keyboard);
   }
 }
 
-impl super::KeyboardPoller for KeyboardPoller {
+impl super::Keyboard for Keyboard {
 
   fn poll(&mut self, timeout: Duration) -> PollResult {
     //convert timeout format to struct that kevent call uses
@@ -69,7 +69,7 @@ impl super::KeyboardPoller for KeyboardPoller {
     };
     //wait until something becomes available on stdin, or timeout happens
     let change_count = unsafe {
-      libc::kevent(self.queue, ptr::null(), 0, &mut self.descriptor, 1, &timeout_spec)
+      libc::kevent(self.queue_fd, ptr::null(), 0, &mut self.descriptor, 1, &timeout_spec)
     };
     //the file descriptor didn't change, the kevent call timed out
     if change_count == 0 {
@@ -91,11 +91,11 @@ impl super::KeyboardPoller for KeyboardPoller {
 
 }
 
-impl Drop for KeyboardPoller {
+impl Drop for Keyboard {
 
   fn drop(&mut self) {
     unsafe {
-      libc::close(self.queue);
+      libc::close(self.queue_fd);
     }
   }
 

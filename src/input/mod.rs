@@ -31,7 +31,7 @@ pub enum PollResult {
 	Err(&'static str)
 }
 
-pub trait KeyboardPoller : Drop {
+pub trait Keyboard : Drop {
 	fn poll(&mut self, timeout: Duration) -> PollResult;
 }
 
@@ -39,10 +39,10 @@ mod termios;
 #[cfg (target_os="macos")]
 mod kqueue;
 #[cfg (target_os="macos")]
-pub fn create_keyboard_poller() -> Result<Box<KeyboardPoller>, &'static str> {
-	let poller = kqueue::KeyboardPoller::new();
+pub fn create_keyboard() -> Result<Box<Keyboard>, &'static str> {
+	let poller = kqueue::Keyboard::new();
 	match poller {
-		Ok(p) => Ok(Box::new(p) as Box<KeyboardPoller>),
+		Ok(p) => Ok(Box::new(p) as Box<Keyboard>),
 		Err(err) => Err(err)
 	}
 }

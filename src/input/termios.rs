@@ -5,17 +5,11 @@ pub struct RestoreHandle {
 	fd: libc::c_int
 }
 
-impl RestoreHandle {
-    fn restore(&mut self) {
-    	unsafe {
-    		libc::tcsetattr(self.fd, 0, &self.original_attr);
-    	}
-    }
-}
-
 impl Drop for RestoreHandle {
 	fn drop(&mut self) {
-		self.restore();
+		unsafe {
+    		libc::tcsetattr(self.fd, 0, &self.original_attr);
+    	}
 	}
 }
 
