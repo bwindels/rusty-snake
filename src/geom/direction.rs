@@ -36,10 +36,10 @@ impl Direction {
 	
 	fn to_point(&self) -> Point {
 		match self {
-			North: Point {x:  0, y:  1},
-			South: Point {x:  0, y: -1},
-			East:  Point {x:  1, y:  0},
-			West:  Point {x: -1, y:  0},
+			North => Point {x:  0, y:  1},
+			South => Point {x:  0, y: -1},
+			East  => Point {x:  1, y:  0},
+			West  => Point {x: -1, y:  0},
 		}
 	}
 

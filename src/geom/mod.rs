@@ -7,6 +7,10 @@ pub struct Size {
 	pub height: Coordinate
 }
 
-pub use point::Point;
-pub use direction::{Direction, Orientation};
-pub use segment::Segment;
+mod point;
+mod segment;
+mod direction;
+
+pub use self::point::Point;
+pub use self::direction::{Direction, Orientation};
+pub use self::segment::Segment;

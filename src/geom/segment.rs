@@ -1,6 +1,6 @@
 type Coordinate = super::Coordinate;
 use super::{Orientation, Direction, Point};
-use std::iter::{Iterator, IntoIterator}
+use std::iter::{Iterator, IntoIterator};
 use std::cmp::{min, max};
 
 #[derive(Copy, Clone)]
@@ -52,7 +52,7 @@ impl Segment {
 		let is_on_line = match orientation {
 			Vertical => p.x == tail.x,
 			Horizontal => p.y == tail.y,
-		}
+		};
 
 		if !is_on_line {
 			false
@@ -62,7 +62,7 @@ impl Segment {
 		let (min, max, value) = match orientation {
 			Vertical => (min(tail.y, head.y), max(tail.y, head.y), p.y),
 			Horizontal => (min(tail.x, head.x), max(tail.x, head.x), p.x),
-		}
+		};
 
 		let is_on_segment = value <= max && value >= min;
 
@@ -81,7 +81,7 @@ impl IntoIterator for Segment {
 
 struct SegmentIterator {
 	index: Coordinate,
-	segment, Segment
+	segment: Segment
 }
 
 impl SegmentIterator {

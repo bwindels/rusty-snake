@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Mul}
+use std::ops::{Add, Sub, Mul};
 type Coordinate = super::Coordinate;
 type SignedCoordinate = super::SignedCoordinate;
 
