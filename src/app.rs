@@ -1,18 +1,17 @@
 use std::time::Duration;
 use input::{Keyboard, PollResult, Key};
 use output::Terminal;
-use output::ansiterm::AnsiTerm;
 use time::Timer;
 use geom::Point;
 
-pub struct SnakeApp {
-	pub keyboard: Box<Keyboard>,
-	pub term: Box<Terminal>,
-	pub timer: Box<Timer>,
+pub struct SnakeApp<A, B, C> {
+	pub keyboard: A,
+	pub term: B,
+	pub timer: C,
 	pub interval: Duration,
 }
 
-impl SnakeApp {
+impl<A: Keyboard, B: Terminal, C: Timer> SnakeApp<A, B, C> {
 
 	pub fn run(&mut self) {
 		self.term.clear();

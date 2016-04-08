@@ -12,6 +12,6 @@ pub trait Timer {
 #[cfg (target_os="macos")]
 mod machtimer;
 #[cfg (target_os="macos")]
-pub fn create_timer() -> Box<Timer> {
-	Box::new(self::machtimer::MachTimer::new()) as Box<Timer>
+pub fn create_timer() -> machtimer::Timer {
+	self::machtimer::MachTimer::new()
 }

@@ -3,26 +3,26 @@ extern crate libc;
 use std::time::Duration;
 use super::Instant;
 
-pub struct MachTimer {
+pub struct Timer {
 	conv_info: libc::mach_timebase_info_data_t
 }
 
 const NANO_SEC_IN_ONE_SEC : f64 = 1000000000f64;
 
-impl MachTimer {
+impl Timer {
 
-	pub fn new() -> MachTimer {
+	pub fn new() -> Timer {
 		let mut conv_info = libc::mach_timebase_info_data_t {numer: 0, denom: 0};
 		unsafe {
 			libc::mach_timebase_info(&mut conv_info);
 		}
-		let timer = MachTimer {conv_info: conv_info};
+		let timer = Timer {conv_info: conv_info};
 		timer
 	}
 
 }
 
-impl super::Timer for MachTimer {
+impl super::Timer for Timer {
 
 	fn now(&self) -> Instant {
 		let abs_time = unsafe {

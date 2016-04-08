@@ -39,10 +39,6 @@ mod termios;
 #[cfg (target_os="macos")]
 mod kqueue;
 #[cfg (target_os="macos")]
-pub fn create_keyboard() -> Result<Box<Keyboard>, &'static str> {
-	let poller = kqueue::Keyboard::new();
-	match poller {
-		Ok(p) => Ok(Box::new(p) as Box<Keyboard>),
-		Err(err) => Err(err)
-	}
+pub fn create_keyboard() -> Result<kqueue::Keyboard, &'static str> {
+	kqueue::Keyboard::new()
 }
