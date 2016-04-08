@@ -24,19 +24,15 @@ impl AnsiTerm {
 
 	pub fn new(fd: libc::c_int) -> Result<AnsiTerm> {
 		let size = get_term_size(fd);
-
-		match size {
-			Ok(s) => {
-				let max_line_len = s.width + 10;	//screen width + 10 for ansi position prefix
-				let term = AnsiTerm {
-					fd: fd,
-					size: s,
-					compose_buffer: String::with_capacity(max_line_len as usize)
-				};
-				Ok(term)
-			},
-			Err(e) => Err(e)
-		}
+		let term = size.map(|s| => {
+			let max_line_len = s.width + 10;	//screen width + 10 for ansi position prefix
+			AnsiTerm {
+				fd: fd,
+				size: s,
+				compose_buffer: String::with_capacity(max_line_len as usize)
+			}
+		});
+		term
 	}
 
 	pub fn from_stdout() -> Result<AnsiTerm> {
