@@ -24,7 +24,7 @@ impl AnsiTerm {
 
 	pub fn new(fd: libc::c_int) -> Result<AnsiTerm> {
 		let size = get_term_size(fd);
-		let term = size.map(|s| => {
+		let term = size.map(|s| {
 			let max_line_len = s.width + 10;	//screen width + 10 for ansi position prefix
 			AnsiTerm {
 				fd: fd,
