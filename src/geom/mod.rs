@@ -1,10 +1,10 @@
-pub type Coordinate = u16;
-pub type SignedCoordinate = i16;
+pub type Coordinate = i16;
+pub type UnsignedCoordinate = u16;
 
 #[derive(Copy, Clone)]
 pub struct Size {
-	pub width: Coordinate,
-	pub height: Coordinate
+	pub width: UnsignedCoordinate,
+	pub height: UnsignedCoordinate
 }
 
 mod point;

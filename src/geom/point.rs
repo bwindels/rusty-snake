@@ -1,33 +1,23 @@
 use std::ops::{Add, Sub, Mul};
-type Coordinate = super::Coordinate;
-type SignedCoordinate = super::SignedCoordinate;
 
 #[derive(Copy, Clone)]
 pub struct Point {
-	pub x: Coordinate,
-	pub y: Coordinate
+	pub x: super::Coordinate,
+	pub y: super::Coordinate
 }
 
-impl Mul<Coordinate> for Point {
+impl Mul<super::Coordinate> for Point {
     type Output = Point;
 
-	fn Mul(&self, n: Coordinate) -> Point {
-		Point {x: self.x * n, y: self.y * y}
-	}
-}
-
-impl Mul<SignedCoordinate> for Point {
-    type Output = Point;
-
-	fn Mul(&self, n: SignedCoordinate) -> Point {
-		Point {x: self.x * n, y: self.y * y}
+	fn mul(self, n: super::Coordinate) -> Point {
+		Point {x: self.x * n, y: self.y * n}
 	}
 }
 
 impl Add for Point {
 	type Output = Point;
 
-	fn Add(&self, b: Point) -> Point {
+	fn add(self, b: Point) -> Point {
 		Point {x: self.x + b.x, y: self.y + b.y}
 	}
 }
@@ -35,7 +25,7 @@ impl Add for Point {
 impl Sub for Point {
     type Output = Point;
 
-	fn Sub(&self, b: Point) -> Point {
+	fn sub(self, b: Point) -> Point {
 		Point {x: self.x - b.x, y: self.y - b.y}
 	}
 }

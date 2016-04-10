@@ -16,37 +16,37 @@ pub enum Direction {
 
 impl Direction {
 
-	fn turn_ccw(&self) -> Direction {
+	pub fn turn_ccw(self) -> Direction {
 		match self {
-			North => West,
-			West => South,
-			South => East,
-			East => North,
+			Direction::North => Direction::West,
+			Direction::West => Direction::South,
+			Direction::South => Direction::East,
+			Direction::East => Direction::North,
 		}
 	}
 
-	fn turn_cw(&self) -> Direction {
+	pub fn turn_cw(self) -> Direction {
 		match self {
-			North => East,
-			East => South,
-			South => West,
-			West => North,
+			Direction::North => Direction::East,
+			Direction::East => Direction::South,
+			Direction::South => Direction::West,
+			Direction::West => Direction::North,
 		}
 	}
 	
-	fn to_point(&self) -> Point {
+	pub fn to_point(self) -> Point {
 		match self {
-			North => Point {x:  0, y:  1},
-			South => Point {x:  0, y: -1},
-			East  => Point {x:  1, y:  0},
-			West  => Point {x: -1, y:  0},
+			Direction::North => Point {x:  0, y:  1},
+			Direction::South => Point {x:  0, y: -1},
+			Direction::East  => Point {x:  1, y:  0},
+			Direction::West  => Point {x: -1, y:  0},
 		}
 	}
 
-	fn orientation() -> Orientation {
+	pub fn orientation(self) -> Orientation {
 		match self {
-			North | South => Vertical,
-			East | West => Horizontal,
+			Direction::North | Direction::South => Orientation::Vertical,
+			Direction::East | Direction::West => Orientation::Horizontal,
 		}
 	}
 }

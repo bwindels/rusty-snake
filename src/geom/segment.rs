@@ -1,4 +1,4 @@
-type Coordinate = super::Coordinate;
+pub type Coordinate = super::Coordinate;
 use super::{Orientation, Direction, Point};
 use std::iter::{Iterator, IntoIterator};
 use std::cmp::{min, max};
@@ -50,18 +50,18 @@ impl Segment {
 		let tail = self.tail;
 		let orientation = self.direction.orientation();
 		let is_on_line = match orientation {
-			Vertical => p.x == tail.x,
-			Horizontal => p.y == tail.y,
+			Orientation::Vertical => p.x == tail.x,
+			Orientation::Horizontal => p.y == tail.y,
 		};
 
 		if !is_on_line {
-			false
+			return false;
 		}
 
 		let head = self.head();
 		let (min, max, value) = match orientation {
-			Vertical => (min(tail.y, head.y), max(tail.y, head.y), p.y),
-			Horizontal => (min(tail.x, head.x), max(tail.x, head.x), p.x),
+			Orientation::Vertical => (min(tail.y, head.y), max(tail.y, head.y), p.y),
+			Orientation::Horizontal => (min(tail.x, head.x), max(tail.x, head.x), p.x),
 		};
 
 		let is_on_segment = value <= max && value >= min;
@@ -79,13 +79,13 @@ impl IntoIterator for Segment {
     }
 }
 
-struct SegmentIterator {
+pub struct SegmentIterator {
 	index: Coordinate,
 	segment: Segment
 }
 
 impl SegmentIterator {
-	fn new(segment: Segment) {
+	fn new(segment: Segment) -> SegmentIterator {
 		SegmentIterator {index: segment.length + 1, segment: segment}
 	}
 }
@@ -95,7 +95,7 @@ impl Iterator for SegmentIterator {
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.index == 0 {
-			Option::None()
+			Option::None
 		}
 		else {
 			self.index -= 1;
