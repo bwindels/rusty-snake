@@ -13,5 +13,5 @@ pub trait Timer {
 mod machtimer;
 #[cfg (target_os="macos")]
 pub fn create_timer() -> machtimer::Timer {
-	self::machtimer::MachTimer::new()
+	self::machtimer::Timer::new()
 }
