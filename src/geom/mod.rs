@@ -1,5 +1,5 @@
 pub type Coordinate = i16;
-pub type UnsignedCoordinate = u16;
+pub type UCoordinate = u16;
 
 #[derive(Copy, Clone)]
 pub struct Size {

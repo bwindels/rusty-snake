@@ -1,36 +1,69 @@
-pub type Coordinate = super::Coordinate;
+pub type UCoordinate = super::UCoordinate;
 use super::{Orientation, Direction, Point};
 use std::iter::{Iterator, IntoIterator};
 use std::cmp::{min, max};
+
+pub enum ShrinkResult {
+	Empty(remaining_amount: UCoordinate),
+	NonEmpty(new: Segment)
+}
 
 #[derive(Copy, Clone)]
 pub struct Segment {
 	tail: Point,
 	direction: Direction,
-	length: Coordinate
+	length: UCoordinate
 }
 
 impl Segment {
 
-	pub fn shrink_tail(&mut self, amount: Coordinate) {
-		self.tail = self.tail + self.direction.to_point() * amount;
-		self.length -= amount;
+	pub fn new(tail: Point, dir: Direction, length: UCoordinate) -> Segment {
+		Segment {
+			tail: tail,
+			direction: dir,
+			length: length
+		}
 	}
 
-	pub fn shrink_head(&mut self, amount: Coordinate) {
-		self.length -= amount;
+	pub fn north(tail: Point, length: UCoordinate) -> Segment {
+		Segment::new(tail, Direction::North, length)
 	}
 
-	pub fn grow_tail(&mut self, amount: Coordinate) {
-		self.tail = self.tail + self.direction.to_point() * (-amount);
-		self.length += amount;
+	pub fn east(tail: Point, length: UCoordinate) -> Segment {
+		Segment::new(tail, Direction::East, length)
+	}
+	
+	pub fn south(tail: Point, length: UCoordinate) -> Segment {
+		Segment::new(tail, Direction::South, length)
+	}
+	
+	pub fn west(tail: Point, length: UCoordinate) -> Segment {
+		Segment::new(tail, Direction::West, length)
+	}
+	
+	pub fn shrink_tail(&self) -> Option<Segment> {
+		if self.is_empty() {
+			None
+		}
+		else {
+			let s = Segment {
+				tail: self.tail + self.direction.to_point() * amount,
+				length: self.length - 1,
+				..self
+			};
+			Some(s)
+		}
 	}
 
-	pub fn grow_head(&mut self, amount: Coordinate) {
-		self.length += amount;
+	pub fn is_empty(&self) -> bool {
+		self.length == 0
 	}
 
-	pub fn length(&self) -> Coordinate {
+	pub fn grow_head(&self, amount: UCoordinate) {
+		Segment {length: self.length + amount, ..self}
+	}
+
+	pub fn length(&self) -> UCoordinate {
 		self.length
 	}
 
@@ -42,8 +75,8 @@ impl Segment {
 		self.point_at(self.length - 1)
 	}
 
-	pub fn point_at(&self, index: Coordinate) -> Point {
-		self.tail + self.direction.to_point() * index
+	pub fn point_at(&self, index: UCoordinate) -> Point {
+		self.tail + (self.direction.to_point() * index)
 	}
 
 	pub fn contains(&self, p: Point) -> bool {
@@ -80,7 +113,7 @@ impl IntoIterator for Segment {
 }
 
 pub struct SegmentIterator {
-	index: Coordinate,
+	index: UCoordinate,
 	segment: Segment
 }
 
