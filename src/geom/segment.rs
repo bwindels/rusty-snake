@@ -136,3 +136,17 @@ impl Iterator for SegmentIterator {
     }
   }
 }
+
+#[test]
+fn test_iterator() {
+	let segment = Segment::new(Point::new(5,5), Direction::East, 4);
+	let expected_points = [
+		Point::new(5,5), Point::new(5,6),
+		Point::new(5,7), Point::new(5,8)
+	];
+
+	assert_eq!(segment.count(), expected_points.iter().count());
+	for (p, expected_point) in segment.zip(expected_points.iter()) {
+	    assert_eq!(p, expected_point);
+	}
+}
