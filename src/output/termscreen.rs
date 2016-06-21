@@ -18,7 +18,7 @@ pub struct TermScreen<T> {
 
 impl<T: Terminal> TermScreen<T> {
 
-  pub fn new(term: T) {
+  pub fn new(term: T) -> TermScreen<T> {
     term.hide_cursor();
     TermScreen {term: term}
   }
