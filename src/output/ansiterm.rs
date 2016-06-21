@@ -58,6 +58,10 @@ impl super::Terminal for AnsiTerm {
     self.write_bytes("\x1B[?25l");
   }
 
+  fn show_cursor(&mut self) {
+    self.write_bytes("\x1B[?25h");
+  }
+
   fn clear(&mut self) {
     self.write_bytes("\x1B[2J");
   } 

@@ -13,6 +13,7 @@ pub trait Terminal {
   fn size(&self) -> Size;
   fn clear(&mut self);
   fn hide_cursor(&mut self);
+  fn show_cursor(&mut self);
   fn flush(&mut self);
 }
 
