@@ -1,9 +1,11 @@
-pub mod ansiterm;
+use geom::{Segment, Point, Size};
+
+pub use self::termscreen::TermScreen;
+pub use self::ansiterm::AnsiTerm;
+
+mod termscreen;
+mod ansiterm;
 mod termsize;
-
-pub use termscreen;
-
-use geom::{Point, Size};
 
 pub trait Terminal {
   fn write(&mut self, pos: Point, string: &str);

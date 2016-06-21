@@ -4,12 +4,11 @@ mod geom;
 mod time;
 mod app;
 
-use output::ansiterm::AnsiTerm;
 use std::time::Duration;
 
 fn main() {
 
-  let term = AnsiTerm::from_stdout().unwrap();
+  let term = output::AnsiTerm::from_stdout().unwrap();
 
   let mut app = app::SnakeApp {
     timer: time::create_timer(),

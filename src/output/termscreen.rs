@@ -1,4 +1,7 @@
-use geom::{Point, Direction};
+use geom::{Point, Direction, Segment, Size};
+use super::Symbol as Symbol;
+use super::Terminal as Terminal;
+use super::Screen as Screen;
 
 fn map_symbol_to_char(s: Symbol) -> &'static str {
   match s {
