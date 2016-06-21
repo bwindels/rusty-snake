@@ -1,11 +1,10 @@
-pub type UCoordinate = super::UCoordinate;
-use super::{Orientation, Direction, Point};
+use super::{UCoordinate, Orientation, Direction, Point};
 use std::iter::{Iterator, IntoIterator};
 use std::cmp::{min, max};
 
 pub enum ShrinkResult {
-  Empty(remaining_amount: UCoordinate),
-  NonEmpty(new: Segment)
+  Empty {remaining_amount: UCoordinate},
+  NonEmpty {new: Segment}
 }
 
 #[derive(Copy, Clone)]
@@ -41,7 +40,7 @@ impl Segment {
     Segment::new(tail, Direction::West, length)
   }
   
-  pub fn shrink_tail(&self) -> Option<Segment> {
+  pub fn shrink_tail(&self, amount: UCoordinate) -> Option<Segment> {
     if self.is_empty() {
       None
     }

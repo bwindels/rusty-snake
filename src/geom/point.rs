@@ -1,15 +1,16 @@
+use super::{Coordinate};
 use std::ops::{Add, Sub, Mul};
 
 #[derive(Copy, Clone)]
 pub struct Point {
-  pub x: super::Coordinate,
-  pub y: super::Coordinate
+  pub x: Coordinate,
+  pub y: Coordinate
 }
 
-impl Mul<super::Coordinate> for Point {
+impl Mul<Coordinate> for Point {
     type Output = Point;
 
-  fn mul(self, n: super::Coordinate) -> Point {
+  fn mul(self, n: Coordinate) -> Point {
     Point {x: self.x * n, y: self.y * n}
   }
 }
