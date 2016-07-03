@@ -6,7 +6,7 @@ pub enum Orientation {
   Vertical
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum Direction {
   North,
   East,
@@ -49,4 +49,28 @@ impl Direction {
       Direction::East | Direction::West => Orientation::Horizontal,
     }
   }
+}
+
+#[test]
+fn turn_cw_4_times() {
+  let d1 = Direction::East;
+  let d2 = d1
+    .turn_cw()
+    .turn_cw()
+    .turn_cw()
+    .turn_cw();
+
+  assert_eq!(d1, d2);
+}
+
+#[test]
+fn turn_ccw_4_times() {
+  let d1 = Direction::East;
+  let d2 = d1
+    .turn_ccw()
+    .turn_ccw()
+    .turn_ccw()
+    .turn_ccw();
+
+  assert_eq!(d1, d2);
 }
