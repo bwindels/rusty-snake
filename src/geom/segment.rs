@@ -154,16 +154,27 @@ fn test_iterator() {
 
 #[test]
 fn test_contains() {
-  let segment = Segment::new(Point::new(5,5), Direction::North, 3);
+  let vertical = Segment::new(Point::new(5,5), Direction::North, 3);
   
-  assert!(!segment.contains(Point::new(4, 6)));
-  assert!(!segment.contains(Point::new(6, 6)));
-  assert!(!segment.contains(Point::new(5, 4)));
-  assert!(!segment.contains(Point::new(5, 8)));
+  assert!(!vertical.contains(Point::new(4, 6)));
+  assert!(!vertical.contains(Point::new(6, 6)));
+  assert!(!vertical.contains(Point::new(5, 4)));
+  assert!(!vertical.contains(Point::new(5, 8)));
 
-  assert!(segment.contains(Point::new(5, 5)));
-  assert!(segment.contains(Point::new(5, 6)));
-  assert!(segment.contains(Point::new(5, 7)));
+  assert!(vertical.contains(Point::new(5, 5)));
+  assert!(vertical.contains(Point::new(5, 6)));
+  assert!(vertical.contains(Point::new(5, 7)));
+
+  let horizontal = Segment::new(Point::new(5,5), Direction::East, 3);
+  
+  assert!(!horizontal.contains(Point::new(6, 4)));
+  assert!(!horizontal.contains(Point::new(6, 6)));
+  assert!(!horizontal.contains(Point::new(4, 5)));
+  assert!(!horizontal.contains(Point::new(8, 5)));
+
+  assert!(horizontal.contains(Point::new(5, 5)));
+  assert!(horizontal.contains(Point::new(6, 5)));
+  assert!(horizontal.contains(Point::new(7, 5)));
 }
 
 #[test]
