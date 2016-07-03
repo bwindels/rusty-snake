@@ -2,11 +2,6 @@ use super::{UCoordinate, Coordinate, Orientation, Direction, Point};
 use std::iter::{Iterator, IntoIterator};
 use std::cmp::{min, max};
 
-pub enum ShrinkResult {
-  Empty {remaining_amount: UCoordinate},
-  NonEmpty {new: Segment}
-}
-
 #[derive(Copy, Clone)]
 pub struct Segment {
   tail: Point,
