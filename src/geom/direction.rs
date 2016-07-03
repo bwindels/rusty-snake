@@ -52,7 +52,7 @@ impl Direction {
 }
 
 #[test]
-fn turn_cw_4_times() {
+fn turn_cw_4_times_square_one() {
   let d1 = Direction::East;
   let d2 = d1
     .turn_cw()
@@ -64,7 +64,7 @@ fn turn_cw_4_times() {
 }
 
 #[test]
-fn turn_ccw_4_times() {
+fn turn_ccw_4_times_square_one() {
   let d1 = Direction::East;
   let d2 = d1
     .turn_ccw()
@@ -73,4 +73,25 @@ fn turn_ccw_4_times() {
     .turn_ccw();
 
   assert_eq!(d1, d2);
+}
+
+#[test]
+fn all_directions_sum_zero() {
+  let sum = Direction::North.to_point() +
+            Direction::East.to_point() +
+            Direction::South.to_point() +
+            Direction::West.to_point();
+  assert_eq!(sum, Point::new(0, 0));
+}
+
+#[test]
+fn all_directions_horizontal_or_vertical() {
+  let h_or_v = | d: Direction | {
+    let p = d.to_point();
+    p.x != p.y && (p.x == 0 || p.y == 0)
+  };
+  assert!(h_or_v(Direction::North));
+  assert!(h_or_v(Direction::East));
+  assert!(h_or_v(Direction::South));
+  assert!(h_or_v(Direction::West));
 }
