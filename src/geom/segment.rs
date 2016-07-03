@@ -167,7 +167,7 @@ fn test_contains() {
 }
 
 #[test]
-fn test_shrink() {
+fn test_shrink_tail() {
   let a = Segment::new(Point::new(5,5), Direction::North, 3);
   let b = a.shrink_tail().unwrap();
   assert_eq!(b.into_iter().collect::<Vec<Point>>(), vec![Point::new(5,7), Point::new(5,6)]);
@@ -175,6 +175,17 @@ fn test_shrink() {
   assert_eq!(c.into_iter().collect::<Vec<Point>>(), vec![Point::new(5,7)]);
   let d = c.shrink_tail();
   assert!(d.is_none());
+}
+
+#[test]
+fn test_grow_head() {
+  let a = Segment::new(Point::new(5,5), Direction::North, 1);
+  let b = a.grow_head();
+  
+  assert_eq!(
+    b.into_iter().collect::<Vec<Point>>(),
+    vec![Point::new(5,6), Point::new(5,5)]
+  );
 }
 
 
