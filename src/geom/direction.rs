@@ -86,7 +86,7 @@ fn all_directions_sum_zero() {
 
 #[test]
 fn all_directions_horizontal_or_vertical() {
-  let h_or_v = | d: Direction | {
+  let h_or_v = |d: Direction| {
     let p = d.to_point();
     p.x != p.y && (p.x == 0 || p.y == 0)
   };
