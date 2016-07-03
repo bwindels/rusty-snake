@@ -151,3 +151,19 @@ fn test_iterator() {
   assert_eq!(segment_iter.next().unwrap(), Point::new(5,5));
   assert_eq!(segment_iter.next(), None);
 }
+
+#[test]
+fn test_contains() {
+  let segment = Segment::new(Point::new(5,5), Direction::North, 3);
+  
+  assert!(!segment.contains(Point::new(4, 6)));
+  assert!(!segment.contains(Point::new(6, 6)));
+  assert!(!segment.contains(Point::new(5, 4)));
+  assert!(!segment.contains(Point::new(5, 8)));
+
+  assert!(segment.contains(Point::new(5, 5)));
+  assert!(segment.contains(Point::new(5, 6)));
+  assert!(segment.contains(Point::new(5, 7)));
+}
+
+
