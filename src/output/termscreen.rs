@@ -12,13 +12,13 @@ fn map_symbol_to_char(s: Symbol) -> &'static str {
   }
 }
 
-pub struct TermScreen<T> {
+pub struct TermScreen<T: Terminal> {
   term: T
 }
 
 impl<T: Terminal> TermScreen<T> {
 
-  pub fn new(term: T) -> TermScreen<T> {
+  pub fn new(mut term: T) -> TermScreen<T> {
     term.hide_cursor();
     TermScreen {term: term}
   }
