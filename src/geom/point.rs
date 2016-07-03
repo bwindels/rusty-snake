@@ -1,31 +1,45 @@
+use super::{Coordinate};
 use std::ops::{Add, Sub, Mul};
+use std::cmp::PartialEq;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Point {
-	pub x: super::Coordinate,
-	pub y: super::Coordinate
+  pub x: Coordinate,
+  pub y: Coordinate
 }
 
-impl Mul<super::Coordinate> for Point {
+impl Point {
+  pub fn new(x: Coordinate, y: Coordinate) -> Point {
+    Point {x: x, y: y}
+  }
+}
+
+impl Mul<Coordinate> for Point {
     type Output = Point;
 
-	fn mul(self, n: super::Coordinate) -> Point {
-		Point {x: self.x * n, y: self.y * n}
-	}
+  fn mul(self, n: Coordinate) -> Point {
+    Point {x: self.x * n, y: self.y * n}
+  }
 }
 
 impl Add for Point {
-	type Output = Point;
+  type Output = Point;
 
-	fn add(self, b: Point) -> Point {
-		Point {x: self.x + b.x, y: self.y + b.y}
-	}
+  fn add(self, b: Point) -> Point {
+    Point {x: self.x + b.x, y: self.y + b.y}
+  }
 }
 
 impl Sub for Point {
     type Output = Point;
 
-	fn sub(self, b: Point) -> Point {
-		Point {x: self.x - b.x, y: self.y - b.y}
-	}
+  fn sub(self, b: Point) -> Point {
+    Point {x: self.x - b.x, y: self.y - b.y}
+  }
+}
+
+impl PartialEq for Point {
+  fn eq(&self, rhs: &Point) -> bool {
+    self.x == rhs.x && self.y == rhs.y
+  }
 }
