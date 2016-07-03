@@ -40,13 +40,13 @@ impl Segment {
     Segment::new(tail, Direction::West, length)
   }
   
-  pub fn shrink_tail(&self, amount: UCoordinate) -> Option<Segment> {
-    if self.is_empty() {
+  pub fn shrink_tail(&self) -> Option<Segment> {
+    if self.length <= 1 {
       None
     }
     else {
       let s = Segment {
-        tail: self.tail + self.direction.to_point() * amount as Coordinate,
+        tail: self.tail + self.direction.to_point(),
         length: self.length - 1,
         .. (*self)
       };
@@ -58,8 +58,8 @@ impl Segment {
     self.length == 0
   }
 
-  pub fn grow_head(&self, amount: UCoordinate) -> Segment {
-    Segment {length: self.length + amount, .. (*self)}
+  pub fn grow_head(&self) -> Segment {
+    Segment {length: self.length + 1, .. (*self)}
   }
 
   pub fn length(&self) -> UCoordinate {
@@ -164,6 +164,17 @@ fn test_contains() {
   assert!(segment.contains(Point::new(5, 5)));
   assert!(segment.contains(Point::new(5, 6)));
   assert!(segment.contains(Point::new(5, 7)));
+}
+
+#[test]
+fn test_shrink() {
+  let a = Segment::new(Point::new(5,5), Direction::North, 3);
+  let b = a.shrink_tail().unwrap();
+  assert_eq!(b.into_iter().collect::<Vec<Point>>(), vec![Point::new(5,7), Point::new(5,6)]);
+  let c = b.shrink_tail().unwrap();
+  assert_eq!(c.into_iter().collect::<Vec<Point>>(), vec![Point::new(5,7)]);
+  let d = c.shrink_tail();
+  assert!(d.is_none());
 }
 
 
