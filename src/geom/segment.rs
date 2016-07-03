@@ -1,4 +1,4 @@
-use super::{UCoordinate, Orientation, Direction, Point};
+use super::{UCoordinate, Coordinate, Orientation, Direction, Point};
 use std::iter::{Iterator, IntoIterator};
 use std::cmp::{min, max};
 
@@ -46,9 +46,9 @@ impl Segment {
     }
     else {
       let s = Segment {
-        tail: self.tail + self.direction.to_point() * amount,
+        tail: self.tail + self.direction.to_point() * amount as Coordinate,
         length: self.length - 1,
-        ..self
+        .. (*self)
       };
       Some(s)
     }
@@ -58,8 +58,8 @@ impl Segment {
     self.length == 0
   }
 
-  pub fn grow_head(&self, amount: UCoordinate) {
-    Segment {length: self.length + amount, ..self}
+  pub fn grow_head(&self, amount: UCoordinate) -> Segment {
+    Segment {length: self.length + amount, .. (*self)}
   }
 
   pub fn length(&self) -> UCoordinate {
@@ -74,8 +74,12 @@ impl Segment {
     self.point_at(self.length - 1)
   }
 
+  pub fn direction(&self) -> Direction {
+    self.direction
+  }
+
   pub fn point_at(&self, index: UCoordinate) -> Point {
-    self.tail + (self.direction.to_point() * index)
+    self.tail + (self.direction.to_point() * index as Coordinate)
   }
 
   pub fn contains(&self, p: Point) -> bool {
