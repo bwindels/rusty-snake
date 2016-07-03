@@ -7,6 +7,12 @@ pub struct Point {
   pub y: Coordinate
 }
 
+impl Point {
+  pub fn new(x: Coordinate, y: Coordinate) -> Point {
+    Point {x: x, y: y}
+  }
+}
+
 impl Mul<Coordinate> for Point {
     type Output = Point;
 
