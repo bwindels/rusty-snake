@@ -108,11 +108,11 @@ impl Segment {
 
 impl IntoIterator for Segment {
   type Item = Point;
-    type IntoIter = SegmentIterator;
+  type IntoIter = SegmentIterator;
 
-    fn into_iter(self) -> Self::IntoIter {
-      SegmentIterator::new(self)
-    }
+  fn into_iter(self) -> Self::IntoIter {
+    SegmentIterator::new(self)
+  }
 }
 
 pub struct SegmentIterator {
@@ -122,7 +122,7 @@ pub struct SegmentIterator {
 
 impl SegmentIterator {
   fn new(segment: Segment) -> SegmentIterator {
-    SegmentIterator {index: segment.length + 1, segment: segment}
+    SegmentIterator {index: segment.length, segment: segment}
   }
 }
 
@@ -143,14 +143,11 @@ impl Iterator for SegmentIterator {
 
 #[test]
 fn test_iterator() {
-	let segment = Segment::new(Point::new(5,5), Direction::East, 4);
-	let expected_points = [
-		Point::new(5,5), Point::new(5,6),
-		Point::new(5,7), Point::new(5,8)
-	];
+	let segment = Segment::new(Point::new(5,5), Direction::North, 3);
+  let mut segment_iter = segment.into_iter();
 
-	assert_eq!(segment.count(), expected_points.iter().count());
-	for (p, expected_point) in segment.zip(expected_points.iter()) {
-	    assert_eq!(p, expected_point);
-	}
+  assert_eq!(segment_iter.next().unwrap(), Point::new(5,7));
+  assert_eq!(segment_iter.next().unwrap(), Point::new(5,6));
+  assert_eq!(segment_iter.next().unwrap(), Point::new(5,5));
+  assert_eq!(segment_iter.next(), None);
 }
