@@ -1,4 +1,4 @@
-use geom::{Segment, Point, Size};
+use geom::{Segment, Point, Size, UCoordinate};
 
 pub use self::termscreen::TermScreen;
 pub use self::ansiterm::AnsiTerm;
@@ -9,7 +9,7 @@ mod termsize;
 
 pub trait Terminal {
   fn write(&mut self, pos: Point, string: &str);
-  fn write_repeated(&mut self, pos: Point, string: &str, amount: u32);
+  fn write_repeated(&mut self, pos: Point, string: &str, amount: UCoordinate);
   fn size(&self) -> Size;
   fn clear(&mut self);
   fn hide_cursor(&mut self);

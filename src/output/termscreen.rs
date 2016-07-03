@@ -38,7 +38,7 @@ impl<T: Terminal> Screen for TermScreen<T> {
   fn draw_segment(&mut self, s: Segment, symbol: Symbol) {
     let chr = map_symbol_to_char(symbol);
 
-    match s.direction {
+    match s.direction() {
       Direction::East => self.term.write_repeated(s.tail(), chr, s.length()),
       Direction::West => self.term.write_repeated(s.head(), chr, s.length()),
       Direction::South | Direction::North => 

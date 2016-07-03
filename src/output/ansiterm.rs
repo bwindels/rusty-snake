@@ -3,7 +3,7 @@ extern crate libc;
 use super::termsize::get_term_size;
 use std::io::{Result};
 use std::fmt::Write;
-use geom::{Point, Size};
+use geom::{Point, Size, UCoordinate};
 
 fn init_buffer_with_pos(buffer: &mut String, pos: Point) {
   buffer.clear();
@@ -72,7 +72,7 @@ impl super::Terminal for AnsiTerm {
     self.write_bytes(self.compose_buffer.as_str());
   }
 
-  fn write_repeated(&mut self, pos: Point, string: &str, amount: u32) {
+  fn write_repeated(&mut self, pos: Point, string: &str, amount: UCoordinate) {
     init_buffer_with_pos(&mut self.compose_buffer, pos);
     for _ in 0..amount {
         self.compose_buffer.push_str(string);
