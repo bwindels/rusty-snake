@@ -2,7 +2,7 @@ use super::{Coordinate};
 use std::ops::{Add, Sub, Mul};
 use std::cmp::PartialEq;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Point {
   pub x: Coordinate,
   pub y: Coordinate
@@ -38,8 +38,3 @@ impl Sub for Point {
   }
 }
 
-impl PartialEq for Point {
-  fn eq(&self, rhs: &Point) -> bool {
-    self.x == rhs.x && self.y == rhs.y
-  }
-}
