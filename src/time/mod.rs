@@ -1,5 +1,6 @@
 use std::time::Duration;
 
+#[derive(Copy, Clone)]
 pub struct Instant {
   abs_time: u64,
 }

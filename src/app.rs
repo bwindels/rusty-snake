@@ -25,42 +25,43 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
     let mut should_exit = false;
     
     while !should_exit {
-      should_exit = self.wait_for_keypress();
+      let key = self.wait_for_keypress();
+      should_exit = match key {
+        Some(k) => match k {
+          Key::Esc => true,
+          _ => false
+        },
+        None => false
+      };
     }
 
     self.screen.draw_text(Point {x:0, y: 15}, "");
   }
 
-  fn wait_for_keypress(&mut self) -> bool {
-    let mut should_exit = false;
+  fn wait_for_keypress(&mut self) -> Option<Key> {
     let start = self.timer.now();
-    let pos2 = Point {x: 5, y: 11};
+    let mut key : Option<Key> = None;
+    let mut remaining_time = self.interval.clone();
 
-    match self.keyboard.poll(self.interval) {
-      PollResult::Timeout => {
-        self.screen.draw_text(pos2, "timed out");
-      },
-      PollResult::Err(msg) => {
-        panic!("error: {:?}", msg);
-      }
-      PollResult::KeyPressed(key) => {
-        should_exit = match key {
-          Key::Esc => true,
-          _ => false,
-        };
-
-        {
-          let spaces = String::from_utf8(vec![b' '; 40]).unwrap();
-          self.screen.draw_text(pos2, &spaces);
+    while remaining_time > Duration::from_millis(0) {
+      match self.keyboard.poll(remaining_time) {
+        PollResult::KeyPressed(k) => {
+          key = Some(k);
+          //immediately return Esc key
+          match k {
+            Key::Esc => {return key;},
+            _ => {}
+          }
+        },
+        PollResult::Err(msg) => {
+          panic!("error: {:?}", msg);
         }
-        
-        self.screen.draw_text(pos2, format!("key pressed {}", key).as_str())
-      },
-    };
-    let end = self.timer.now();
-    let elapsed = self.timer.diff(start, end);
-    self.screen.draw_text(Point {x: 40, y: 11}, format!("elapsed time: {:?}", elapsed).as_str());
+        PollResult::Timeout => {}
+      };
+      let end = self.timer.now();
+      remaining_time = self.timer.diff(start, end);
+    }
 
-    should_exit
+    return key;
   }
 }

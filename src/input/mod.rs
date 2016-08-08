@@ -1,6 +1,7 @@
 use std::fmt::{Formatter, Display, Error};
 use std::time::Duration;
 
+#[derive(Copy, Clone)]
 pub enum Key {
   Left,
   Right,
