@@ -20,12 +20,16 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
     let size = self.screen.size();
     let message = format!("the screen has height {} and width {}", size.height, size.width);
     self.screen.draw_text(Point {x: 5, y: 5}, message.as_str());
-    self.screen.draw_text(Point {x: 5, y: 10}, "Watching keyboard...");
 
     let mut should_exit = false;
-    
+    let mut counter = 0;
     while !should_exit {
       let key = self.wait_for_keypress();
+      counter += 1;
+      let message = format!("polled {} times", counter);
+
+      self.screen.draw_text(Point {x: 5, y: 6}, message.as_str());
+
       should_exit = match key {
         Some(k) => match k {
           Key::Esc => true,
@@ -34,23 +38,22 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
         None => false
       };
     }
-
-    self.screen.draw_text(Point {x:0, y: 15}, "");
   }
 
   fn wait_for_keypress(&mut self) -> Option<Key> {
     let start = self.timer.now();
     let mut key : Option<Key> = None;
-    let mut remaining_time = self.interval.clone();
+    let mut passed_time = Duration::from_millis(0);
+    let mut return_immediately = false;
 
-    while remaining_time > Duration::from_millis(0) {
-      match self.keyboard.poll(remaining_time) {
+    while !return_immediately && passed_time < self.interval {
+
+      match self.keyboard.poll(self.interval - passed_time) {
         PollResult::KeyPressed(k) => {
           key = Some(k);
-          //immediately return Esc key
-          match k {
-            Key::Esc => {return key;},
-            _ => {}
+          return_immediately = match k {
+            Key::Esc => true,
+            _ => false
           }
         },
         PollResult::Err(msg) => {
@@ -58,10 +61,13 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
         }
         PollResult::Timeout => {}
       };
-      let end = self.timer.now();
-      remaining_time = self.timer.diff(start, end);
+
+      if !return_immediately {
+        let end = self.timer.now();
+        passed_time = self.timer.diff(start, end);
+      }
     }
 
-    return key;
+    key
   }
 }
