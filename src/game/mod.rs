@@ -1,11 +1,10 @@
-pub use self::snake::Snake;
-
 mod snake;
+mod field;
 
 pub enum StepResult {
   Collision,
   CaughtApple,
-  Nothing
+  Moved
 }
 
 pub enum RelativeDirection {
