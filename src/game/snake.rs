@@ -1,10 +1,13 @@
-use std::collections::Vec;
+use std::vec::Vec;
+use geom::{Segment, Point, UCoordinate};
+use output::{Symbol, Screen};
+use super::RelativeDirection;
 
-struct Snake {
+pub struct Snake {
   segments: Vec<Segment>
 }
 
-impl<S: Screen> Snake {
+impl Snake {
 
   pub fn new(s: Segment) {
     let segments = vec!(s);
@@ -19,7 +22,7 @@ impl<S: Screen> Snake {
     self.segments.any(|s: Segment| s.contains(p))
   }
 
-  pub fn draw(&self, screen: &mut S) {
+  pub fn draw<S: Screen>(&self, screen: &mut S) {
     for s in self.segments {
       screen.draw_segment(s, Symbol::SnakeBody);
     }
@@ -27,7 +30,7 @@ impl<S: Screen> Snake {
 
   pub fn shrink_tail(&mut self)  {
     let tail_segment = self.segments[0].shrink_tail().unwrap();
-    if(tail_segment.is_empty() && self.segments.size() > 1) {
+    if tail_segment.is_empty() && self.segments.size() > 1 {
       self.segments.remove(0);
     }
     else {
@@ -42,7 +45,7 @@ impl<S: Screen> Snake {
       Left => Some(head_segment.direction.turn_ccw()),
       Right => Some(head_segment.direction.turn_cw()),
       Straight => None
-    }
+    };
 
     match new_direction {
       Some(dir) => {
