@@ -1,15 +1,3 @@
-pub enum StepResult {
-  Collision,
-  CaughtApple,
-  Nothing
-}
-
-pub enum RelativeDirection {
-  Straight,
-  Left,
-  Right
-}
-
 pub struct SnakeGame {
   field: Field,
   snake: Snake,
