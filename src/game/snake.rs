@@ -33,13 +33,16 @@ impl Snake {
   }
 
   pub fn shrink_tail(&mut self)  {
-    let tail_segment = self.segments[0].shrink_tail().unwrap();
-    if tail_segment.is_empty() && self.segments.len() > 1 {
-      self.segments.remove(0);
-    }
-    else {
-      self.segments[0] = tail_segment;
-    }
+    let tail_segment = self.segments[0];
+
+    match tail_segment.shrink_tail() {
+    	Some(s) => {
+    		self.segments[0] = s;
+    	},
+    	None => {
+    		self.segments.remove(0);
+    	}
+    };
   }
 
   pub fn grow_head(&mut self, dir: RelativeDirection) {
@@ -93,5 +96,21 @@ fn test_grow_head_straight() {
 	assert_eq!(
 		snake.points(),
 		[Point::new(0, -2), Point::new(0, -1), Point::new(0, 0)]
+	);
+}
+
+#[test]
+fn test_shrink_tail() {
+	let mut snake = Snake::new(Segment::east(Point::new(0,0), 2));
+	snake.grow_head(RelativeDirection::Left);
+	snake.shrink_tail();
+	assert_eq!(
+		snake.points(),
+		[Point::new(1, 1), Point::new(1, 0)]
+	);
+	snake.shrink_tail();
+	assert_eq!(
+		snake.points(),
+		[Point::new(1, 1)]
 	);
 }
