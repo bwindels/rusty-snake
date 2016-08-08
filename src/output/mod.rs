@@ -17,6 +17,7 @@ pub trait Terminal {
   fn flush(&mut self);
 }
 
+#[derive(Copy, Clone)]
 pub enum Symbol {
   Apple,
   SnakeBody,
