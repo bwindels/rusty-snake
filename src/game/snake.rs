@@ -28,6 +28,10 @@ impl Snake {
     }
   }
 
+  pub fn points(&self) -> Vec<Point> {
+  	self.segments.iter().rev().flat_map(|s| s.into_iter()).collect()
+  }
+
   pub fn shrink_tail(&mut self)  {
     let tail_segment = self.segments[0].shrink_tail().unwrap();
     if tail_segment.is_empty() && self.segments.len() > 1 {
@@ -60,4 +64,34 @@ impl Snake {
     };
   }
 
+}
+
+#[test]
+fn test_grow_head_left() {
+	let mut snake = Snake::new(Segment::north(Point::new(0,0), 2));
+	snake.grow_head(RelativeDirection::Left);
+	assert_eq!(
+		snake.points(),
+		[Point::new(-1, 1), Point::new(0, 1), Point::new(0, 0)]
+	);
+}
+
+#[test]
+fn test_grow_head_right() {
+	let mut snake = Snake::new(Segment::north(Point::new(0,0), 2));
+	snake.grow_head(RelativeDirection::Right);
+	assert_eq!(
+		snake.points(),
+		[Point::new(1, 1), Point::new(0, 1), Point::new(0, 0)]
+	);
+}
+
+#[test]
+fn test_grow_head_straight() {
+	let mut snake = Snake::new(Segment::north(Point::new(0,0), 2));
+	snake.grow_head(RelativeDirection::Straight);
+	assert_eq!(
+		snake.points(),
+		[Point::new(0, 2), Point::new(0, 1), Point::new(0, 0)]
+	);
 }
