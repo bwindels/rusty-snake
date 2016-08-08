@@ -7,13 +7,13 @@ pub struct Field {
 
 impl Field {
 
-  fn new(size: Size) -> Field {
+  pub fn new(size: Size) -> Field {
     Field {
       size: size
     }
   }
 
-  fn draw<S: Screen>(&self, screen: &mut S) {
+  pub fn draw<S: Screen>(&self, screen: &mut S) {
     let sym = Symbol::Wall;
     screen.draw_segment(Segment::east(Point::new(0,0), self.size.width), sym);
     screen.draw_segment(Segment::south(Point::new(0,1), self.size.height - 2), sym);
@@ -21,7 +21,7 @@ impl Field {
     screen.draw_segment(Segment::east(Point::new(0,self.size.height as Coordinate - 1), self.size.width), sym);
   }
 
-  fn is_passable(&self, pos: Point) -> bool {
+  pub fn is_passable(&self, pos: Point) -> bool {
     if pos.x == 0 || pos.x == (self.size.width as Coordinate - 1) {
       return false;
     }
@@ -31,7 +31,7 @@ impl Field {
     true
   }
 
-  fn initial_snake_segment(&self) -> Segment {
+  pub fn initial_snake_segment(&self) -> Segment {
     let length = 10 as UCoordinate;
     let tail = Point {
       x: (self.size.width as Coordinate / 2) + (length as Coordinate / 2),
