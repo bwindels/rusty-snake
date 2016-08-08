@@ -100,23 +100,22 @@ fn test_grow_head_straight() {
 }
 
 #[test]
-fn test_shrink_tail() {
+fn test_shrink_tail_shorten_segment() {
 	let mut snake = Snake::new(Segment::east(Point::new(0,0), 2));
+	snake.shrink_tail();
+	assert_eq!(
+		snake.points(),
+		[Point::new(1, 0)]
+	);
+}
+
+#[test]
+fn test_shrink_tail_remove_segment() {
+	let mut snake = Snake::new(Segment::east(Point::new(0,0), 1));
 	snake.grow_head(RelativeDirection::Left);
-	snake.grow_head(RelativeDirection::Straight);
 	snake.shrink_tail();
 	assert_eq!(
 		snake.points(),
-		[Point::new(1, 2), Point::new(1, 1), Point::new(1, 0)]
-	);
-	snake.shrink_tail();
-	assert_eq!(
-		snake.points(),
-		[Point::new(1, 2), Point::new(1, 1)]
-	);
-	snake.shrink_tail();
-	assert_eq!(
-		snake.points(),
-		[Point::new(1, 2)]
+		[Point::new(0, 1)]
 	);
 }
