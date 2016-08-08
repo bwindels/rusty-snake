@@ -3,6 +3,7 @@ mod output;
 mod geom;
 mod time;
 mod app;
+mod game;
 
 use std::time::Duration;
 
