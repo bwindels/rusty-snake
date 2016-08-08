@@ -103,14 +103,20 @@ fn test_grow_head_straight() {
 fn test_shrink_tail() {
 	let mut snake = Snake::new(Segment::east(Point::new(0,0), 2));
 	snake.grow_head(RelativeDirection::Left);
+	snake.grow_head(RelativeDirection::Straight);
 	snake.shrink_tail();
 	assert_eq!(
 		snake.points(),
-		[Point::new(1, 1), Point::new(1, 0)]
+		[Point::new(1, 2), Point::new(1, 1), Point::new(1, 0)]
 	);
 	snake.shrink_tail();
 	assert_eq!(
 		snake.points(),
-		[Point::new(1, 1)]
+		[Point::new(1, 2), Point::new(1, 1)]
+	);
+	snake.shrink_tail();
+	assert_eq!(
+		snake.points(),
+		[Point::new(1, 2)]
 	);
 }
