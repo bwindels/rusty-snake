@@ -58,6 +58,7 @@ impl<T: Terminal> Screen for TermScreen<T> {
   }
 
   fn clear(&mut self) {
+    self.term.write(Point::new(0, 0), "");
     self.term.clear();
   }
 
