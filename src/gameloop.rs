@@ -15,7 +15,7 @@ impl<A: Keyboard, B: Screen, C: Timer, G: Game> GameLoop<A, B, C, G> {
 
   pub fn run(&mut self) {
     self.screen.clear();
-    self.game.initial_draw(&mut self.screen);
+    self.game.full_draw(&mut self.screen);
 
     let mut last_update_time = self.timer.now();
     let mut should_exit = false;

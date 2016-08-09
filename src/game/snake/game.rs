@@ -65,7 +65,7 @@ impl Game for SnakeGame {
     }
   }
 
-  fn initial_draw<S: Screen>(&self, screen: &mut S) {
+  fn full_draw<S: Screen>(&self, screen: &mut S) {
     self.level.full_draw(screen);
 
     if self.game_over {
