@@ -42,7 +42,7 @@ impl<T: Terminal> Screen for TermScreen<T> {
       Direction::East => self.term.write_repeated(s.tail(), chr, s.length()),
       Direction::West => self.term.write_repeated(s.head(), chr, s.length()),
       Direction::South | Direction::North => 
-        for p in s {
+        for p in s.points() {
           self.term.write(p, chr);
         }
     };

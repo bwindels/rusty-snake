@@ -99,13 +99,8 @@ impl Segment {
 
     is_on_segment
   }
-}
 
-impl IntoIterator for Segment {
-  type Item = Point;
-  type IntoIter = SegmentIterator;
-
-  fn into_iter(self) -> Self::IntoIter {
+  pub fn points(self) -> SegmentIterator {
     SegmentIterator::new(self)
   }
 }
@@ -139,7 +134,7 @@ impl Iterator for SegmentIterator {
 #[test]
 fn test_iterator() {
 	let segment = Segment::new(Point::new(5,5), Direction::North, 3);
-  let mut segment_iter = segment.into_iter();
+  let mut segment_iter = segment.points();
 
   assert_eq!(segment_iter.next().unwrap(), Point::new(5,7));
   assert_eq!(segment_iter.next().unwrap(), Point::new(5,6));
@@ -176,9 +171,9 @@ fn test_contains() {
 fn test_shrink_tail() {
   let a = Segment::new(Point::new(5,5), Direction::North, 3);
   let b = a.shrink_tail().unwrap();
-  assert_eq!(b.into_iter().collect::<Vec<Point>>(), vec![Point::new(5,7), Point::new(5,6)]);
+  assert_eq!(b.points().collect::<Vec<Point>>(), vec![Point::new(5,7), Point::new(5,6)]);
   let c = b.shrink_tail().unwrap();
-  assert_eq!(c.into_iter().collect::<Vec<Point>>(), vec![Point::new(5,7)]);
+  assert_eq!(c.points().collect::<Vec<Point>>(), vec![Point::new(5,7)]);
   let d = c.shrink_tail();
   assert!(d.is_none());
 }
@@ -189,7 +184,7 @@ fn test_grow_head() {
   let b = a.grow_head();
   
   assert_eq!(
-    b.into_iter().collect::<Vec<Point>>(),
+    b.points().collect::<Vec<Point>>(),
     vec![Point::new(5,6), Point::new(5,5)]
   );
 }

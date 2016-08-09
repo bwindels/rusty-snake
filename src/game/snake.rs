@@ -29,7 +29,7 @@ impl Snake {
   }
 
   pub fn points(&self) -> Vec<Point> {
-  	self.segments.iter().rev().flat_map(|s| s.into_iter()).collect()
+  	self.segments.iter().rev().flat_map(|s| s.points()).collect()
   }
 
   pub fn shrink_tail(&mut self)  {
