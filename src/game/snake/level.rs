@@ -46,6 +46,10 @@ impl Level {
       return StepResult::Collision;
     }
 
+    if self.snake.head_collides_with_body() {
+      return StepResult::Collision;
+    }
+
     StepResult::Moved
   }
 

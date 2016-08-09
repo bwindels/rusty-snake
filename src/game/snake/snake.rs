@@ -14,12 +14,14 @@ impl Snake {
     Snake {segments: segments}
   }
 
+  pub fn head_collides_with_body(&self) -> bool {
+    let head = self.head();
+    let mut other_segments = self.segments.iter().rev().skip(1);
+    other_segments.any(|s: &Segment| s.contains(head) )
+  }
+
   pub fn head(&self) -> Point {
     self.segments.last().unwrap().head()
-  }
-  
-  pub fn contains(&self, p: Point) -> bool {
-    self.segments.iter().any(|s: &Segment| s.contains(p))
   }
 
   pub fn draw<S: Screen>(&self, screen: &mut S) {

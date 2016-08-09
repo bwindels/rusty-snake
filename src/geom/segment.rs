@@ -2,7 +2,7 @@ use super::{UCoordinate, Coordinate, Orientation, Direction, Point};
 use std::iter::Iterator;
 use std::cmp::{min, max};
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Segment {
   tail: Point,
   direction: Direction,

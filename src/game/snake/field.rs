@@ -32,7 +32,7 @@ impl Field {
   }
 
   pub fn initial_snake_segment(&self) -> Segment {
-    let length = 10 as UCoordinate;
+    let length = 20 as UCoordinate;
     let tail = Point {
       x: (self.size.width as Coordinate / 2) + (length as Coordinate / 2),
       y: self.size.height as Coordinate / 2
