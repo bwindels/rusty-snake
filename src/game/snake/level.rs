@@ -40,6 +40,7 @@ impl Level {
 
     if head == self.apple_position {
       self.apple_position = self.new_apple(random);
+      self.grow_step_count = 5;
       return StepResult::CaughtApple;
     }
 
