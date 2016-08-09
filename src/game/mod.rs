@@ -2,11 +2,9 @@ use std::time::Duration;
 use input::Key;
 use output::Screen;
 
-pub use self::game::SnakeGame;
+pub use self::snake::SnakeGame;
 
 mod snake;
-mod field;
-mod game;
 
 pub trait Game {
 	fn max_idle_time(&self) -> Duration;

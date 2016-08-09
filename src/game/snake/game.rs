@@ -1,7 +1,7 @@
 use output::{Screen, Symbol};
 use super::snake::Snake;
 use super::field::Field;
-use super::Game;
+use game::Game;
 use geom::{Point, Size};
 use input::Key;
 use std::time::Duration;
