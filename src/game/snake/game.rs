@@ -1,6 +1,6 @@
-use output::{Screen, Symbol};
+use output::Screen;
 use game::Game;
-use geom::{Point, Size};
+use geom::Size;
 use input::Key;
 use std::time::Duration;
 use super::level::Level;
@@ -8,9 +8,9 @@ use super::field::Field;
 use super::RelativeDirection;
 
 fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
-    match key_option {
-      Some(key) => match key {
-        Key::Left => RelativeDirection::Left,
+  match key_option {
+    Some(key) => match key {
+      Key::Left => RelativeDirection::Left,
       Key::Right => RelativeDirection::Right,
       _ => RelativeDirection::Straight
     },

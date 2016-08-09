@@ -1,6 +1,5 @@
 use super::{Coordinate};
 use std::ops::{Add, Sub, Mul};
-use std::cmp::PartialEq;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Point {

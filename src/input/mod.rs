@@ -1,4 +1,3 @@
-use std::fmt::{Formatter, Debug, Error};
 use std::time::Duration;
 
 #[derive(Copy, Clone, Debug)]

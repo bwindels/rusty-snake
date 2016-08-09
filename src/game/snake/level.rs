@@ -2,7 +2,7 @@ use output::{Screen, Symbol};
 use super::snake::Snake;
 use super::field::Field;
 use super::{RelativeDirection, StepResult};
-use geom::{Point, Size};
+use geom::Point;
 
 pub struct Level {
   field: Field,

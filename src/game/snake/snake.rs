@@ -1,5 +1,5 @@
 use std::vec::Vec;
-use geom::{Segment, Point, UCoordinate};
+use geom::{Segment, Point};
 use output::{Symbol, Screen};
 use super::RelativeDirection;
 

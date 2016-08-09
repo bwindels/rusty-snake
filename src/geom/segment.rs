@@ -1,5 +1,5 @@
 use super::{UCoordinate, Coordinate, Orientation, Direction, Point};
-use std::iter::{Iterator, IntoIterator};
+use std::iter::Iterator;
 use std::cmp::{min, max};
 
 #[derive(Copy, Clone)]
@@ -47,10 +47,6 @@ impl Segment {
       };
       Some(s)
     }
-  }
-
-  pub fn is_empty(self) -> bool {
-    self.length == 0
   }
 
   pub fn grow_head(self) -> Segment {
