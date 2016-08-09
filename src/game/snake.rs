@@ -1,7 +1,7 @@
 use std::vec::Vec;
 use geom::{Segment, Point, UCoordinate};
 use output::{Symbol, Screen};
-use super::RelativeDirection;
+use super::game::RelativeDirection;
 
 pub struct Snake {
   segments: Vec<Segment>

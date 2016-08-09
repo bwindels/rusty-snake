@@ -1,8 +1,33 @@
 use output::{Screen, Symbol};
-use super::{StepResult, RelativeDirection};
 use super::snake::Snake;
 use super::field::Field;
+use super::Game;
 use geom::{Point, Size};
+use input::Key;
+use std::time::Duration;
+
+enum StepResult {
+  Collision,
+  CaughtApple,
+  Moved
+}
+
+pub enum RelativeDirection {
+  Straight,
+  Left,
+  Right
+}
+
+fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
+    match key_option {
+      Some(key) => match key {
+        Key::Left => RelativeDirection::Left,
+      Key::Right => RelativeDirection::Right,
+      _ => RelativeDirection::Straight
+    },
+    None => RelativeDirection::Straight
+  }
+}
 
 pub struct SnakeGame {
   field: Field,
@@ -50,16 +75,29 @@ impl SnakeGame {
     StepResult::Moved
   }
 
-  pub fn draw<S: Screen>(&mut self, screen: &mut S) {
-    screen.clear();
-    self.field.draw(screen);
-    self.snake.draw(screen);
-    screen.draw_point(self.apple_position, Symbol::Apple);
-  }
-
   fn new_apple(&self) -> Point {
     return Point::new(1, 1);
   }
 
 }
 
+impl Game for SnakeGame {
+
+  fn update(&mut self, input: Option<Key>, passed_time: Duration) -> bool {
+    let rel_dir = key_to_relative_direction(input);
+    self.step(rel_dir);
+    true
+  }
+
+  fn max_idle_time(&self) -> Duration {
+    Duration::from_millis(200)
+  }
+
+  fn initial_draw<S: Screen>(&self, screen: &mut S) {
+    screen.clear();
+    self.field.draw(screen);
+    self.snake.draw(screen);
+    screen.draw_point(self.apple_position, Symbol::Apple);
+  }
+
+}
