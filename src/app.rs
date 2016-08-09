@@ -4,32 +4,38 @@ use input::{Keyboard, PollResult, Key};
 use output::Screen;
 use time::Timer;
 use geom::Point;
+use game::{SnakeGame, RelativeDirection};
+
+fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
+  match key_option {
+    Some(key) => match key {
+      Key::Left => RelativeDirection::Left,
+      Key::Right => RelativeDirection::Right,
+      _ => RelativeDirection::Straight
+    },
+    None => RelativeDirection::Straight
+  }
+}
+
 
 pub struct SnakeApp<A, B, C> {
   pub keyboard: A,
   pub screen: B,
   pub timer: C,
   pub interval: Duration,
+  pub game: SnakeGame
 }
 
 impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
 
   pub fn run(&mut self) {
     self.screen.clear();
-
-    let size = self.screen.size();
-    let message = format!("the screen has height {} and width {}", size.height, size.width);
-    self.screen.draw_text(Point {x: 5, y: 5}, message.as_str());
+    
+    self.game.draw(&mut self.screen);
 
     let mut should_exit = false;
-    let mut counter = 0;
     while !should_exit {
       let key = self.sleep_and_poll_keyboard();
-      counter += 1;
-      let message = format!("polled {} times", counter);
-
-      self.screen.draw_text(Point {x: 5, y: 6}, message.as_str());
-
       should_exit = match key {
         Some(k) => match k {
           Key::Esc => true,
@@ -37,7 +43,11 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
         },
         None => false
       };
+      self.game.step(key_to_relative_direction(key));
+      self.game.draw(&mut self.screen);
     }
+
+    self.screen.clear();
   }
 
   fn sleep_and_poll_keyboard(&mut self) -> Option<Key> {
