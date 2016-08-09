@@ -17,7 +17,7 @@ impl Snake {
   pub fn head_collides_with_body(&self) -> bool {
     let head = self.head();
     let mut other_segments = self.segments.iter().rev().skip(1);
-    other_segments.any(|s: &Segment| s.contains(head) )
+    other_segments.any(|s: &Segment| s.contains(head))
   }
 
   pub fn head(&self) -> Point {
