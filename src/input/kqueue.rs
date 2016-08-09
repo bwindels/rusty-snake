@@ -61,15 +61,19 @@ impl Keyboard {
 
 impl super::Keyboard for Keyboard {
 
-  fn poll(&mut self, timeout: Duration) -> PollResult {
+  fn poll(&mut self, timeout: Option<Duration>) -> PollResult {
     //convert timeout format to struct that kevent call uses
-    let timeout_spec = libc::timespec {
-      tv_sec: timeout.as_secs() as i64,
-      tv_nsec: timeout.subsec_nanos() as i64
-    };
+    let timeout_spec = timeout.map(|d| libc::timespec {
+      tv_sec: d.as_secs() as i64,
+      tv_nsec: d.subsec_nanos() as i64
+    });
+    let timeout_spec_pointer = timeout_spec
+      .map(|ts| &ts as * const libc::timespec)
+      .unwrap_or(ptr::null() as * const libc::timespec);
+
     //wait until something becomes available on stdin, or timeout happens
     let change_count = unsafe {
-      libc::kevent(self.queue_fd, ptr::null(), 0, &mut self.descriptor, 1, &timeout_spec)
+      libc::kevent(self.queue_fd, ptr::null(), 0, &mut self.descriptor, 1, timeout_spec_pointer)
     };
     //the file descriptor didn't change, the kevent call timed out
     if change_count == 0 {

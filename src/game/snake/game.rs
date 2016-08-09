@@ -43,8 +43,8 @@ impl Game for SnakeGame {
     true
   }
 
-  fn max_idle_time(&self) -> Duration {
-    Duration::from_millis(200)
+  fn max_idle_time(&self) -> Option<Duration> {
+    Some(Duration::from_millis(200))
   }
 
   fn initial_draw<S: Screen>(&self, screen: &mut S) {

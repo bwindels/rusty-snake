@@ -44,7 +44,7 @@ impl<A: Keyboard, B: Screen, C: Timer, G: Game> GameLoop<A, B, C, G> {
     self.screen.clear();
   }
 
-  fn sleep_and_poll_input(&mut self, timeout: Duration) -> Option<Key> {
+  fn sleep_and_poll_input(&mut self, timeout: Option<Duration>) -> Option<Key> {
     match self.keyboard.poll(timeout) {
       PollResult::KeyPressed(k) => Some(k),
       PollResult::Timeout => None,

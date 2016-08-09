@@ -18,7 +18,7 @@ pub enum PollResult {
 }
 
 pub trait Keyboard : Drop {
-  fn poll(&mut self, timeout: Duration) -> PollResult;
+  fn poll(&mut self, timeout: Option<Duration>) -> PollResult;
 }
 
 mod termios;
