@@ -1,6 +1,6 @@
 ## Remaining tasks
 
- - [ ] write and pass tests for Snake struct
+ - [x] write and pass tests for Snake struct
  - [ ] write and pass tests for SnakeGame struct
  - [ ] make Game trait that determines polling timeout and can handle a keypress
  - [ ] turn SnakeApp into GameLoop, that talks to instance of Game trait
