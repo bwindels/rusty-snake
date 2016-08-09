@@ -71,11 +71,11 @@ impl Snake {
 
 #[test]
 fn test_grow_head_left() {
-	let mut snake = Snake::new(Segment::north(Point::new(0,0), 2));
+	let mut snake = Snake::new(Segment::south(Point::new(0,0), 2));
 	snake.grow_head(RelativeDirection::Left);
 	assert_eq!(
 		snake.points(),
-		[Point::new(-1, 1), Point::new(0, 1), Point::new(0, 0)]
+		[Point::new(1, 1), Point::new(0, 1), Point::new(0, 0)]
 	);
 }
 
@@ -85,13 +85,13 @@ fn test_grow_head_right() {
 	snake.grow_head(RelativeDirection::Right);
 	assert_eq!(
 		snake.points(),
-		[Point::new(1, -1), Point::new(1, 0), Point::new(0, 0)]
+		[Point::new(1, 1), Point::new(1, 0), Point::new(0, 0)]
 	);
 }
 
 #[test]
 fn test_grow_head_straight() {
-	let mut snake = Snake::new(Segment::south(Point::new(0,0), 2));
+	let mut snake = Snake::new(Segment::north(Point::new(0,0), 2));
 	snake.grow_head(RelativeDirection::Straight);
 	assert_eq!(
 		snake.points(),
@@ -116,6 +116,6 @@ fn test_shrink_tail_remove_segment() {
 	snake.shrink_tail();
 	assert_eq!(
 		snake.points(),
-		[Point::new(0, 1)]
+		[Point::new(0, -1)]
 	);
 }

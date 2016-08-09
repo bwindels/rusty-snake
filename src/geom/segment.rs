@@ -133,7 +133,7 @@ impl Iterator for SegmentIterator {
 
 #[test]
 fn test_iterator() {
-	let segment = Segment::new(Point::new(5,5), Direction::North, 3);
+	let segment = Segment::new(Point::new(5,5), Direction::South, 3);
   let mut segment_iter = segment.points();
 
   assert_eq!(segment_iter.next().unwrap(), Point::new(5,7));
@@ -144,7 +144,7 @@ fn test_iterator() {
 
 #[test]
 fn test_contains() {
-  let vertical = Segment::new(Point::new(5,5), Direction::North, 3);
+  let vertical = Segment::new(Point::new(5,5), Direction::South, 3);
   
   assert!(!vertical.contains(Point::new(4, 6)));
   assert!(!vertical.contains(Point::new(6, 6)));
@@ -169,7 +169,7 @@ fn test_contains() {
 
 #[test]
 fn test_shrink_tail() {
-  let a = Segment::new(Point::new(5,5), Direction::North, 3);
+  let a = Segment::new(Point::new(5,5), Direction::South, 3);
   let b = a.shrink_tail().unwrap();
   assert_eq!(b.points().collect::<Vec<Point>>(), vec![Point::new(5,7), Point::new(5,6)]);
   let c = b.shrink_tail().unwrap();
@@ -180,7 +180,7 @@ fn test_shrink_tail() {
 
 #[test]
 fn test_grow_head() {
-  let a = Segment::new(Point::new(5,5), Direction::North, 1);
+  let a = Segment::new(Point::new(5,5), Direction::South, 1);
   let b = a.grow_head();
   
   assert_eq!(
