@@ -2,6 +2,8 @@
 
  - [ ] write and pass tests for Snake struct
  - [ ] write and pass tests for SnakeGame struct
+ - [ ] make Game trait that determines polling timeout and can handle a keypress
+ - [ ] turn SnakeApp into GameLoop, that talks to instance of Game trait
  - [ ] implement SnakeGame::new_apple using rand library
  - [ ] write and pass tests for Field struct
  - [ ] add padding support to (Term)Screen::draw_text()
