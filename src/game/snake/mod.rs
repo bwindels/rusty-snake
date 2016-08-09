@@ -1,5 +1,18 @@
+pub use self::game::SnakeGame;
+
 mod field;
 mod snake;
 mod game;
+mod level;
 
-pub use self::game::SnakeGame;
+pub enum StepResult {
+  Collision,
+  CaughtApple,
+  Moved
+}
+
+pub enum RelativeDirection {
+  Straight,
+  Left,
+  Right
+}
