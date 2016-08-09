@@ -2,7 +2,8 @@ use output::{Screen, Symbol};
 use super::snake::Snake;
 use super::field::Field;
 use super::{RelativeDirection, StepResult};
-use geom::Point;
+use geom::{Point, Coordinate};
+use random::Random;
 
 pub struct Level {
   field: Field,
@@ -24,7 +25,7 @@ impl Level {
     }
   }
 
-  pub fn step(&mut self, dir: RelativeDirection) -> StepResult {
+  pub fn step<R: Random>(&mut self, dir: RelativeDirection, random: &mut R) -> StepResult {
 
     if self.grow_step_count != 0 {
       self.grow_step_count -= 1;
@@ -38,7 +39,7 @@ impl Level {
     let head = self.snake.head();
 
     if head == self.apple_position {
-      self.apple_position = self.new_apple();
+      self.apple_position = self.new_apple(random);
       return StepResult::CaughtApple;
     }
 
@@ -53,8 +54,19 @@ impl Level {
     StepResult::Moved
   }
 
-  fn new_apple(&self) -> Point {
-    return Point::new(1, 1);
+  pub fn reset<R: Random>(&mut self, random: &mut R) {
+    self.apple_position = self.new_apple(random);
+  }
+
+  fn new_apple<R: Random>(&self, random: &mut R) -> Point {
+    let mut p = Point::new(0, 0);
+    let mut intersects = true;
+    let max = self.field.size();
+    while intersects {
+      p = random.new_point(max);
+      intersects = !self.field.is_passable(p) || self.snake.contains(p);
+    }
+    return p;
   }
 
   pub fn full_draw<S: Screen>(&self, screen: &mut S) {

@@ -6,6 +6,7 @@ use std::time::Duration;
 use super::level::Level;
 use super::field::Field;
 use super::{RelativeDirection, StepResult};
+use random::Random;
 
 fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
   match key_option {
@@ -18,26 +19,32 @@ fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
   }
 }
 
-pub struct SnakeGame {
+pub struct SnakeGame<R> {
   level: Level,
-  game_over: bool
+  game_over: bool,
+  random: R
 }
 
-impl SnakeGame {
+impl<R: Random> SnakeGame<R> {
 
-  pub fn new(size: Size) -> SnakeGame {
+  pub fn new(size: Size, random: R) -> SnakeGame<R> {
     let field = Field::new(size);
     let level = Level::new(field);
-
-    SnakeGame {
+    
+    let mut game = SnakeGame {
       level: level,
-      game_over: false
-    }
+      game_over: false,
+      random: random
+    };
+
+    game.level.reset(&mut game.random);
+
+    return game;
   }
 
 }
 
-impl Game for SnakeGame {
+impl<R: Random> Game for SnakeGame<R> {
 
   fn update(&mut self, input: Option<Key>, passed_time: Duration) -> bool {
 
@@ -46,7 +53,7 @@ impl Game for SnakeGame {
     }
 
     let rel_dir = key_to_relative_direction(input);
-    let step_result = self.level.step(rel_dir);
+    let step_result = self.level.step(rel_dir, &mut self.random);
 
     match step_result {
       StepResult::Collision => {self.game_over = true;},

@@ -39,4 +39,8 @@ impl Field {
     };
     Segment::west(tail, length)
   }
+
+  pub fn size(&self) -> Size {
+    self.size
+  }
 }

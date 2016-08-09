@@ -20,6 +20,10 @@ impl Snake {
     other_segments.any(|s: &Segment| s.contains(head))
   }
 
+  pub fn contains(&self, p: Point) -> bool {
+    self.segments.iter().any(|s: &Segment| s.contains(p))
+  }
+
   pub fn head(&self) -> Point {
     self.segments.last().unwrap().head()
   }
