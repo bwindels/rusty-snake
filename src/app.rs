@@ -24,7 +24,7 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
     let mut should_exit = false;
     let mut counter = 0;
     while !should_exit {
-      let key = self.wait_for_keypress();
+      let key = self.sleep_and_poll_keyboard();
       counter += 1;
       let message = format!("polled {} times", counter);
 
@@ -40,7 +40,7 @@ impl<A: Keyboard, B: Screen, C: Timer> SnakeApp<A, B, C> {
     }
   }
 
-  fn wait_for_keypress(&mut self) -> Option<Key> {
+  fn sleep_and_poll_keyboard(&mut self) -> Option<Key> {
     let start = self.timer.now();
     let mut key = None;
     let mut passed_time = Duration::from_millis(0);
