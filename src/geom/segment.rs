@@ -35,7 +35,7 @@ impl Segment {
     Segment::new(tail, Direction::West, length)
   }
   
-  pub fn shrink_tail(&self) -> Option<Segment> {
+  pub fn shrink_tail(self) -> Option<Segment> {
     if self.length <= 1 {
       None
     }
@@ -43,41 +43,41 @@ impl Segment {
       let s = Segment {
         tail: self.tail + self.direction.to_point(),
         length: self.length - 1,
-        .. (*self)
+        .. self
       };
       Some(s)
     }
   }
 
-  pub fn is_empty(&self) -> bool {
+  pub fn is_empty(self) -> bool {
     self.length == 0
   }
 
-  pub fn grow_head(&self) -> Segment {
-    Segment {length: self.length + 1, .. (*self)}
+  pub fn grow_head(self) -> Segment {
+    Segment {length: self.length + 1, .. self}
   }
 
-  pub fn length(&self) -> UCoordinate {
+  pub fn length(self) -> UCoordinate {
     self.length
   }
 
-  pub fn tail(&self) -> Point {
+  pub fn tail(self) -> Point {
     self.tail
   }
 
-  pub fn head(&self) -> Point {
+  pub fn head(self) -> Point {
     self.point_at(self.length - 1)
   }
 
-  pub fn direction(&self) -> Direction {
+  pub fn direction(self) -> Direction {
     self.direction
   }
 
-  pub fn point_at(&self, index: UCoordinate) -> Point {
+  pub fn point_at(self, index: UCoordinate) -> Point {
     self.tail + (self.direction.to_point() * index as Coordinate)
   }
 
-  pub fn contains(&self, p: Point) -> bool {
+  pub fn contains(self, p: Point) -> bool {
     let tail = self.tail;
     let orientation = self.direction.orientation();
     let is_on_line = match orientation {
