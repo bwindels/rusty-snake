@@ -10,6 +10,6 @@
  - [ ] write and pass tests for Field struct
  - [ ] add padding support to (Term)Screen::draw_text()
  - [ ] write and pass tetst for TermScreen
- - [ ] write score counting
- - [ ] write snake moving faster as score goes up
+ - [x] write score counting
+ - [x] write snake moving faster as score goes up
  - [ ] port input and timer to linux
