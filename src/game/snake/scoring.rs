@@ -38,6 +38,6 @@ impl Scoring {
   }
 
   pub fn level(self) -> u32 {
-    ((self.score as f32).log10() - 2f32).max(1f32) as u32
+    max(1, self.score / 1000)
   }
 }
