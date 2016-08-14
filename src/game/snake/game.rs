@@ -9,6 +9,7 @@ use super::{RelativeDirection, StepResult};
 use super::scoring::Scoring;
 use random::Random;
 use std::fmt::Write;
+use std::cmp::min;
 
 fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
   match key_option {
@@ -97,7 +98,12 @@ impl<R: Random> Game for SnakeGame<R> {
       None
     }
     else {
-      Some(Duration::from_millis(200))
+      let level = self.scoring.level();
+      let base_time = Duration::from_millis(500);
+      let min_time = Duration::from_millis(20);
+
+      let time = base_time - min(Duration::from_millis(50) * level, base_time - min_time);
+      Some(time)
     }
   }
 

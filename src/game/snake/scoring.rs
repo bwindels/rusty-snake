@@ -36,4 +36,8 @@ impl Scoring {
 
     return level_multiplier * combo_multiplier as u32;
   }
+
+  pub fn level(self) -> u32 {
+    ((self.score as f32).log10() - 2f32).max(1f32) as u32
+  }
 }
