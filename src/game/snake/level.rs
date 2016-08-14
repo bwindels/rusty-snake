@@ -9,7 +9,8 @@ pub struct Level {
   field: Field,
   snake: Snake,
   apple_position: Point,
-  grow_step_count: u16
+  grow_step_count: u16,
+  old_tail: Option<Point>
 }
 
 impl Level {
@@ -21,7 +22,8 @@ impl Level {
       field: field,
       snake: snake,
       apple_position: Point::new(1, 1),
-      grow_step_count: 0
+      grow_step_count: 0,
+      old_tail: None
     }
   }
 
@@ -29,8 +31,11 @@ impl Level {
 
     if self.grow_step_count != 0 {
       self.grow_step_count -= 1;
+      self.old_tail = None;
     }
     else {
+      //store previous tail to clear it when drawing incrementally
+      self.old_tail = Some(self.snake.tail());
       self.snake.shrink_tail();
     }
 
@@ -75,6 +80,15 @@ impl Level {
     self.field.draw(screen);
     self.snake.draw(screen);
     screen.draw_point(self.apple_position, Symbol::Apple);
+  }
+
+  pub fn incremental_draw<S: Screen>(&self, screen: &mut S) {
+    let new_head = self.snake.head();
+    screen.draw_point(new_head, Symbol::SnakeBody);
+
+    if self.old_tail.is_some() {
+      screen.draw_point(self.old_tail.unwrap(), Symbol::Clear);
+    }
   }
 
 }

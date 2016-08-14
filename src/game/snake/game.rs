@@ -42,6 +42,12 @@ impl<R: Random> SnakeGame<R> {
     return game;
   }
 
+  fn draw_game_state<S: Screen>(&self, screen: &mut S) {
+    if self.game_over {
+      screen.draw_text(Point::new(8, 5), "GAME OVER! HIT ESC TO LEAVE THE GAME");
+    }
+  }
+
 }
 
 impl<R: Random> Game for SnakeGame<R> {
@@ -74,10 +80,12 @@ impl<R: Random> Game for SnakeGame<R> {
 
   fn full_draw<S: Screen>(&self, screen: &mut S) {
     self.level.full_draw(screen);
+    self.draw_game_state(screen);
+  }
 
-    if self.game_over {
-      screen.draw_text(Point::new(8, 5), "GAME OVER! HIT ESC TO LEAVE THE GAME");
-    }
+  fn incremental_draw<S: Screen>(&self, screen: &mut S) {
+    self.level.incremental_draw(screen);
+    self.draw_game_state(screen);
   }
 
 }

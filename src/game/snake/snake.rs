@@ -28,6 +28,10 @@ impl Snake {
     self.segments.last().unwrap().head()
   }
 
+  pub fn tail(&self) -> Point {
+    self.segments[0].tail()
+  }
+
   pub fn draw<S: Screen>(&self, screen: &mut S) {
     for s in &self.segments {
       screen.draw_segment(*s, Symbol::SnakeBody);
