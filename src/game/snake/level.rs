@@ -29,19 +29,25 @@ impl Level {
 
   pub fn step<R: Random>(&mut self, dir: RelativeDirection, random: &mut R) -> StepResult {
 
+    self.snake.grow_head(dir);
+    let head = self.snake.head();
+
     if self.grow_step_count != 0 {
       self.grow_step_count -= 1;
       self.old_tail = None;
     }
     else {
       //store previous tail to clear it when drawing incrementally
-      self.old_tail = Some(self.snake.tail());
+      let old_tail = self.snake.tail();
+      //but only if the head is not in the location of the old tail (biting it's own tail)
+      if old_tail != head {
+        self.old_tail = Some(old_tail);
+      }
+
       self.snake.shrink_tail();
     }
 
-    self.snake.grow_head(dir);
 
-    let head = self.snake.head();
 
     if head == self.apple_position {
       self.apple_position = self.new_apple(random);
@@ -89,7 +95,7 @@ impl Level {
     if let Some(old_tail) = self.old_tail {
       screen.draw_point(old_tail, Symbol::Clear);
     }
-    
+
     screen.draw_point(self.apple_position, Symbol::Apple);
   }
 
