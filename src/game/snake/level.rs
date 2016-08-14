@@ -89,6 +89,8 @@ impl Level {
     if let Some(old_tail) = self.old_tail {
       screen.draw_point(old_tail, Symbol::Clear);
     }
+    
+    screen.draw_point(self.apple_position, Symbol::Apple);
   }
 
 }

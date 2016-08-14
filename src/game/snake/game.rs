@@ -6,7 +6,9 @@ use std::time::Duration;
 use super::level::Level;
 use super::field::Field;
 use super::{RelativeDirection, StepResult};
+use super::scoring::Scoring;
 use random::Random;
+use std::fmt::Write;
 
 fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
   match key_option {
@@ -22,7 +24,9 @@ fn key_to_relative_direction(key_option: Option<Key>) -> RelativeDirection {
 pub struct SnakeGame<R> {
   level: Level,
   game_over: bool,
-  random: R
+  random: R,
+  scoring: Scoring,
+  score_buffer: String
 }
 
 impl<R: Random> SnakeGame<R> {
@@ -34,7 +38,9 @@ impl<R: Random> SnakeGame<R> {
     let mut game = SnakeGame {
       level: level,
       game_over: false,
-      random: random
+      random: random,
+      scoring: Scoring::new(),
+      score_buffer: String::new()
     };
 
     game.level.reset(&mut game.random);
@@ -42,9 +48,19 @@ impl<R: Random> SnakeGame<R> {
     return game;
   }
 
-  fn draw_game_state<S: Screen>(&self, screen: &mut S) {
+  fn draw_game_state<S: Screen>(&mut self, screen: &mut S) {
     if self.game_over {
       screen.draw_text(Point::new(8, 5), "GAME OVER! HIT ESC TO LEAVE THE GAME");
+    }
+    else {
+      let score = self.scoring.score();
+      let multiplier = self.scoring.multiplier();
+      {
+        let mut buffer = &mut self.score_buffer;
+        buffer.clear();
+        write!(buffer, " Score: {0:.>#10} x{1: <#4}", score, multiplier);
+        screen.draw_text(Point::new(2, 0), buffer.as_str());
+      }
     }
   }
 
@@ -62,8 +78,15 @@ impl<R: Random> Game for SnakeGame<R> {
     let step_result = self.level.step(rel_dir, &mut self.random);
 
     match step_result {
-      StepResult::Collision => {self.game_over = true;},
-      _ => {}
+      StepResult::Collision => {
+        self.game_over = true;
+      },
+      StepResult::CaughtApple => {
+        self.scoring.adjust_for_apple();
+      }
+      StepResult::Moved => {
+        self.scoring.adjust_for_move();
+      }
     };
 
     return true;
@@ -78,12 +101,12 @@ impl<R: Random> Game for SnakeGame<R> {
     }
   }
 
-  fn full_draw<S: Screen>(&self, screen: &mut S) {
+  fn full_draw<S: Screen>(&mut self, screen: &mut S) {
     self.level.full_draw(screen);
     self.draw_game_state(screen);
   }
 
-  fn incremental_draw<S: Screen>(&self, screen: &mut S) {
+  fn incremental_draw<S: Screen>(&mut self, screen: &mut S) {
     self.level.incremental_draw(screen);
     self.draw_game_state(screen);
   }

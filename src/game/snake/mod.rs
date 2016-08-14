@@ -4,6 +4,7 @@ mod field;
 mod snake;
 mod game;
 mod level;
+mod scoring;
 
 pub enum StepResult {
   Collision,
