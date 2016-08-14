@@ -86,8 +86,8 @@ impl Level {
     let new_head = self.snake.head();
     screen.draw_point(new_head, Symbol::SnakeBody);
 
-    if self.old_tail.is_some() {
-      screen.draw_point(self.old_tail.unwrap(), Symbol::Clear);
+    if let Some(old_tail) = self.old_tail {
+      screen.draw_point(old_tail, Symbol::Clear);
     }
   }
 
