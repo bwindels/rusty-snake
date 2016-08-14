@@ -101,8 +101,9 @@ impl<R: Random> Game for SnakeGame<R> {
       let level = self.scoring.level();
       let base_time = Duration::from_millis(500);
       let min_time = Duration::from_millis(20);
-
-      let time = base_time - min(Duration::from_millis(50) * level, base_time - min_time);
+      let max_level_decrease = base_time - min_time;
+      let level_decrease = Duration::from_millis(30) * level;
+      let time = base_time - min(level_decrease, max_level_decrease);
       Some(time)
     }
   }
