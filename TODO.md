@@ -7,6 +7,7 @@
  - [x] implement partial redrawing with only changed parts without clearing the screen
  - [x] turn SnakeApp into GameLoop, that talks to instance of Game trait
  - [x] implement SnakeGame::new_apple using rand library
+ - [ ] draw head differently so it stays clear which way the snakes moves if it's head is next to it's body
  - [ ] write and pass tests for Field struct
  - [ ] add padding support to (Term)Screen::draw_text()
  - [ ] write and pass tetst for TermScreen
